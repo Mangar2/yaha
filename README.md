@@ -17,5 +17,5 @@ The home automation consists of the follwoing elmements
 
 Nearly everything is programmed from the scratch. 
 
-<h3>The Broker<h3>
+<h3>The Broker</h3>
 The controlling core is a "MQTT like" broker using HTTP instead of Websockets. 

@@ -1,0 +1,36 @@
+# Abstract
+
+This is a very simple web server. It is based on the http packet included in node.js.
+I built it due to its simplicity and the independence from other packages
+
+## Functionality
+
+constuct the server with new Server(port number).
+register your callbacks according to the http functions you need. Supported are
+put, patch, get, post, delete (it does not matter, if you use upper or lower case letters)
+All those functions receives 4 parameters:
+
+* payload: the data sent (body)
+* headers: the http header structure
+* path: the path as string
+* res: the http res structure
+
+### Usage example
+
+server = new HttpServer(9001);
+server.on('get', (payload, headers, path, res) => {
+    console.log('get received');
+    console.log(payload);
+    console.log(headers);
+    console.log(path);
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end("get");
+});
+
+### listen and closed callbacks
+
+The web server additionally supports the callbacks "listen" and "closed" called, once the server is listening and once the server is closed. Both callbacks have no parameters.
+
+### close
+
+The server has a close function that closes all active socket connections and shuts down the server.

@@ -1,0 +1,21 @@
+{
+  "name": "@mangar2/message",
+  "version": "1.0.1",
+  "description": "Object to deploy MQTT type messages",
+  "main": "message.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "keywords": [
+    "message",
+    "MQTT",
+    "topic"
+  ],
+  "author": "Volker Böhm",
+  "license": "LGPL-3.0-or-later",
+  "homepage": "https://github.com/Mangar2/yaha.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mangar2/yaha/blob/master/node_modules/message"
+  }
+}

@@ -1,0 +1,26 @@
+# Abstract
+
+This is a very simple http web client. It is based on the http packet included in node.js.
+I built it due to its simplicity and the independence from other packages
+
+## Functionality
+
+The class provides a simple interface to publish data to clients.
+
+### Usage example
+
+* Create a lient with host and port
+  let client = new HttpClient("127.0.0.1", 9001);
+* Register a callback to get the result
+  client.on("result", result => console.log(result))
+* Send a GET to 127.0.0.1:9001/clients with the body test
+  client.send("/clients", "GET", "test", {'Content-Type': 'application/json', packetId: 1, mqttpacket: "publish"} );
+
+### supported callbacks
+
+* result(statusCode, headers, payload)
+* error(err) or any error
+
+### close
+
+The static close method closes all open connections for all pending requests

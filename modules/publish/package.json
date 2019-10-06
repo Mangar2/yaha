@@ -1,0 +1,25 @@
+{
+  "name": "@mangar2/publish",
+  "version": "1.0.1",
+  "description": "publishes messages to a MQTT-Style HTTP broker",
+  "main": "publish.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "keywords": [
+    "publish",
+    "message",
+    "MQTT",
+    "Broker"
+  ],
+  "author": "Volker Böhm",
+  "license": "LGPL-3.0-or-later",
+  "homepage": "https://github.com/Mangar2/yaha.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mangar2/yaha/blob/master/node_modules/publish"
+  },
+  "dependencies": {
+    "@mangar2/httpclient": "latest"
+  }
+}

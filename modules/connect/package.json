@@ -1,0 +1,26 @@
+{
+  "name": "@mangar2/connect",
+  "version": "1.1.2",
+  "description": "connects and subscribes to a broker",
+  "main": "connect.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "keywords": [
+    "connect",
+    "disconnect",
+    "subscribe",
+    "unsubscribe",
+    "mqtt"
+  ],
+  "author": "Volker Böhm",
+  "license": "LGPL-3.0-or-later",
+  "homepage": "https://github.com/Mangar2/yaha.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mangar2/yaha/blob/master/node_modules/connect"
+  },
+  "dependencies": {
+    "@mangar2/httpclient": "latest"
+  }
+}

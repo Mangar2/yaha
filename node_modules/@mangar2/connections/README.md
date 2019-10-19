@@ -1,0 +1,26 @@
+# Abstract
+
+This package is part of an MQTT style broker. It manages connections to the broker. It can be used idependently - if you create another MQTT style broker (I see no other usage).
+
+## Functionality
+
+### Configuration
+
+* filename: name of the file to persist connections (a timestamp will be added to the filename)
+* directory: directory to persist connections
+* inFlightWindow: amount of pending messages per topic for ordered topics. Default: 1
+* timeoutInMilliseconds: timeout to retransmit messages
+* maxRetryCount: amount of retries of a single message until the connection if closed
+
+The main functions are
+
+* connect: establish a new connection
+  * clientId: name of the client
+  * host: host name/ip
+  * port: port number
+  * clean: true, if the connection is fully deleted on disconnect. Else subscriptions and messages will be stored
+* disconnect: removes a connection
+* subscribe: subscribes for a topic
+* unsubscrib: unsubscribe for a topic
+* queueMessagesToPublish: adds a message to all clients subscribing to this topic
+* sendAllMessages: runs through all clients, all topics and all queues and transmit the message (by calling a provided callback)

@@ -1,11 +1,10 @@
 # yaha
+
 yet another home automation
 
-<h2>Abstract</h2>
+## Abstract
 
-I have build my own home automation and are sharing the code here piece by piece. It runs on linux and windows and focusses on automation
-Thus it is not a "home remote control". In an effect input/output is a little behind, there is currently a rudementar web client 
-but it is an expert client...
+I have build my own home automation and are sharing the code here piece by piece. It runs on linux and windows and focusses on automation. Thus it is not a "home remote control". In an effect input/output is a little behind, there is currently a rudementar web client but it is an expert client...
 
 The home automation consists of the follwoing elmements
 
@@ -15,7 +14,8 @@ The home automation consists of the follwoing elmements
 *FS20 remote controls
 *ZWave (integrated via OpenZwave)
 
-Nearly everything is programmed from the scratch. 
+Nearly everything is programmed from the scratch.
 
-<h3>The Broker</h3>
-The controlling core is a "MQTT like" broker using HTTP instead of Websockets. 
+### The Broker
+
+The controlling core is a "MQTT like" broker using HTTP instead of Websockets.

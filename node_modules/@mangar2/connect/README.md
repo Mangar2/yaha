@@ -1,0 +1,20 @@
+# Abstract
+
+This is part of the http based mqtt broker. Use this class to connect/disconnect and subscribe/unsubscribe to the broker
+
+## Functionality
+
+Provides functions to connect, disconnect, subscribe and unsubscribe to a broker. All functions are based on async/promises
+
+### Usage example
+
+let connect = new Connect("/connect/test", "127.0.0.1", 9001, 9002);
+result = await connect.connect(CLEAN);
+
+### result structures
+
+See mqtt definition of. All result structures are JSON objects
+
+### close
+
+The close function closes all pending requests

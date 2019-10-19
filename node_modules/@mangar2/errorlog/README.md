@@ -1,0 +1,12 @@
+# Abstract
+
+errorlog is a small helper to log error messages (usually used in catch blocks)
+
+## Functionality
+
+(error) => logs the error to the console with console.error
+If error is a string, it just logs the string.
+If error is an Error object it logs the message and the stack trace.
+I use it on catch blocks that I do not expect to fail
+An error output usually looks like:
+2019-9-28 17:45:22 error message

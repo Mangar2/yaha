@@ -1,0 +1,20 @@
+# Abstract
+
+This is part of the http based mqtt broker. Use this class to publish messages to the http "mqtt style" message broker
+
+## Functionality
+
+Provides a method to publish messages with qos = 0, 1, 2.
+
+### Usage example
+
+Publish the message with topic /a/a, value 1, reason "test", QoS 0, retain 0:
+result = await publish.publish(new Message("/a/a", 1, "test"), 0, 0);
+
+### result structures
+
+result = either true, false (for QoS=1..2) or undefined (for QoS = 0)
+
+### close
+
+close closes all connections

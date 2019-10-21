@@ -1,0 +1,1 @@
+const Broker = require("@mangar2/broker");

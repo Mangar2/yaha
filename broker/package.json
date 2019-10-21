@@ -1,10 +1,9 @@
 {
-  "name": "@mangar2/broker",
+  "name": "broker",
   "version": "1.0.0",
   "description": "implements a 'mqtt type' http server",
   "main": "broker.js",
   "scripts": {
-    "test": "node test/test.js",
     "start" : "node broker.js"
   },
   "keywords": [
@@ -18,12 +17,9 @@
   "homepage": "https://github.com/Mangar2/yaha.git",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mangar2/yaha/blob/master/node_modules/@mangar2/broker"
+    "url": "https://github.com/Mangar2/yaha/blob/master/broker"
   },
   "dependencies": {
-    "@mangar2/config": "latest",
-    "@mangar2/httpserver": "latest",
-    "@mangar2/httpclient": "latest",
-    "@mangar2/shutdown": "latest"
+    "@mangar2/broker"
   }
 }

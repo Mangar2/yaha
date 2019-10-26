@@ -41,35 +41,13 @@ receive.on("publish", (message, qos, dup) => {
     }
 });
 
-async function subscribe_v0(topics) {
-    let payload = {
-        clientId: connect.clientId,
-        subscribe: {QoS:0, topics:["#"]}
-    }
-    let packetid = connect.providePacketId();
-    let result = await connect.putJsonMessage("/subscribe", {packetid}, payload);
-    let headers = result.headers;
-
-    if (result.statusCode !== 200) {
-        throw(Error("Unable to subscribe status code: " + statusCode + " headers " + JSON.stringify(headers)));
-    }
-
-    return JSON.parse(result.payload);
-}
-
 async function connectToBroker(clean) {
+    let version = '0.0';
     let topics = {
-        '/#' : 0
+        '#' : 0
     }
     try {
-        await connect.connect(clean);
-    }
-    catch (err) {
-        console.error(err);
-    }
-    connect.isConnected = true;
-    try {
-        await subscribe_v0(topics);
+        await connect.connectAndSubscribe(clean, topics, version);
     }
     catch(err) {
         console.log(err);

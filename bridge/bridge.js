@@ -15,12 +15,11 @@
 'use strict';
 const Receive = require("@mangar2/receive")
 const Publish = require("@mangar2/publish");
-const UnitTest = require("@mangar2/unittest");
 const Message = require("@mangar2/message");
 const Connect = require("@mangar2/connect");
 const shutdown = require("@mangar2/shutdown");
 const Broker = require("@mangar2/broker");
-const TopicStore = require("@mangar2/topicstore");
+const TopicStore = require("@mangar2/messagestore");
 
 const HOST = "192.168.0.4";
 const PORT = 8183;
@@ -34,7 +33,7 @@ let amount = 0;
 
 receive.on("publish", (message, qos, dup) => {
     console.log("%s (qos%s), value:%s, dup:%s", message.topic, qos, message.value, dup);
-    store.addData(message.topic, message.value, message.reason);
+    store.addData(message);
     amount++;
     if (amount % 20 == 0) {
         store.persist("./", "bridge")

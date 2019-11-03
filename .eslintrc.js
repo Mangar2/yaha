@@ -15,5 +15,7 @@ module.exports = {
     ecmaVersion: 2018
   },
   rules: {
+    indent: ["warn", 4],
+    'no-throw-literal': 'off'
   }
 }

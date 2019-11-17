@@ -1,3 +1,4 @@
 publish.ps1
 broker20*
 .eslintrc.json
+*.pem

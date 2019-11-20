@@ -25,12 +25,13 @@ The Broker is built according the mqtt principle. Please read the mqtt documenta
 
 Supported:
 
-* Quality of service 0, 1
+* Quality of service 0, 1, 2
 * Connect, Disconnect
 * Subscribe, Unsubscribe
 * Publish
 * Logging
 * Retain Messages
+* Will message
 
 Configuration options:
 
@@ -45,8 +46,6 @@ Configuration options:
 
 Not Supported:
 
-* Quality of service 2 (partially implemented using it will break the broker)
-* Will messages
 * Username/password
 * https
 * sending messages without network access (no reverse proxy functionality)

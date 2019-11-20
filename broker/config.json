@@ -27,6 +27,7 @@
     "production": {
         "configId": "production",
         "broker" : {
+            "persistInterval": 60000,
             "port": 9001
         },
         "connections": {

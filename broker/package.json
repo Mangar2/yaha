@@ -20,6 +20,8 @@
     "url": "https://github.com/Mangar2/yaha/blob/master/broker"
   },
   "dependencies": {
-    "@mangar2/broker"
+    "@mangar2/broker" : "latest",
+    "@mangar2/config" : "latest",
+    "@mangar2/messagestore": "latest"
   }
 }

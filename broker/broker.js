@@ -14,8 +14,17 @@
 'use strict'
 
 const Broker = require('@mangar2/broker')
+const MessageStore = require('@mangar2/messagestore')
 const config = require('./config.json')
+const options = require('@mangar2/config')(config)
 
-var broker = new Broker(config)
+const broker = new Broker(options.broker)
+if (options.messagestore !== undefined) {
+    const messageStore = new MessageStore(options.messagestore)
+    messageStore.run()
+    broker.on('publish', message => {
+        messageStore.addMessage(message)
+    })
+}
 broker.run()
 broker.connect('192.168.0.4', 8183)

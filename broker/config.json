@@ -1,52 +1,72 @@
 {
     "development": {
-        "configId": "development",
-        "broker" : {
-            "persistInterval": 10000,
-            "port": 9001
+        "messagestore" : {
+            "persist" : {
+                "keepFiles": 5,
+                "directory": ".",
+                "fileName": "messages"
+            },
+            "server": {
+                "port": 9002
+            },
+            "tree": {
+                "maxHistoryLength": 120,
+                "maxValuesLength": 1024,
+                "historyHysterese": 20,
+                "upperBoundFactor": 1.2,
+                "upperBoundAddInMilliseconds": 1000,
+                "lowerBoundFactor": 0.8,
+                "lowerBoundSubInMilliseconds": 1000
+            }
         },
-        "connections": {
-            "inFlightWindow": 1,
-            "timeoutInMilliseconds": 10000,
-            "maxRetryCount": 10,
-            "maxQueueSize": 1000,
-            "directory": ".",
-            "fileName": "broker",
-            "log": [
-                {
-                    "module": "received",
-                    "topic": "/system/broker/#"
-                },
-                {
-                    "module": "send",
-                    "topic": "/system/broker/error"
-                }
-            ]
+        "broker" : {
+            "persistInterval": 60000,
+            "port": 9001,
+            "connections": {
+                "inFlightWindow": 1,
+                "timeoutInMilliseconds": 10000,
+                "maxRetryCount": 10,
+                "maxQueueSize": 1000,
+                "directory": ".",
+                "fileName": "broker",
+                "log": [
+                    {
+                        "module": "received",
+                        "topic": "/system/broker/#"
+                    },
+                    {   "module": "received",
+                        "topic": "#"
+                    },
+                    {
+                        "module": "send",
+                        "topic": "/system/broker/error"
+                    }
+                ]
+            }
         }
     },
     "production": {
-        "configId": "production",
         "broker" : {
             "persistInterval": 60000,
-            "port": 9001
-        },
-        "connections": {
-            "inFlightWindow": 1,
-            "timeoutInMilliseconds": 10000,
-            "maxRetryCount": 10,
-            "maxQueueSize": 1000,
-            "directory": ".",
-            "fileName": "broker",
-            "log": [
-                {
-                    "module": "received",
-                    "topic": "/system/broker/#"
-                },
-                {
-                    "module": "send",
-                    "topic": "/system/broker/error"
-                }
-            ]
+            "port": 9001,
+            "connections": {
+                "inFlightWindow": 1,
+                "timeoutInMilliseconds": 10000,
+                "maxRetryCount": 10,
+                "maxQueueSize": 1000,
+                "directory": ".",
+                "fileName": "broker",
+                "log": [
+                    {
+                        "module": "received",
+                        "topic": "/system/broker/#"
+                    },
+                    {
+                        "module": "send",
+                        "topic": "/system/broker/error"
+                    }
+                ]
+            }
         }
     }
 }

@@ -4,7 +4,8 @@
             "persist" : {
                 "keepFiles": 5,
                 "directory": ".",
-                "fileName": "messages"
+                "fileName": "messages",
+                "interval": 60000
             },
             "server": {
                 "port": 9002

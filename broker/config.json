@@ -33,14 +33,11 @@
                 "log": [
                     {
                         "module": "received",
-                        "topic": "/system/broker/#"
-                    },
-                    {   "module": "received",
-                        "topic": "#"
+                        "topic": "$SYS/#"
                     },
                     {
                         "module": "send",
-                        "topic": "/system/broker/error"
+                        "topic": "$SYS/#"
                     }
                 ]
             }
@@ -60,11 +57,11 @@
                 "log": [
                     {
                         "module": "received",
-                        "topic": "/system/broker/#"
+                        "topic": "$SYS/#"
                     },
                     {
                         "module": "send",
-                        "topic": "/system/broker/error"
+                        "topic": "$SYS/#"
                     }
                 ]
             }

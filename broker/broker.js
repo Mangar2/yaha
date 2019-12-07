@@ -15,6 +15,7 @@
 
 const Broker = require('@mangar2/broker')
 const MessageStore = require('@mangar2/messagestore')
+const errorLog = require('@mangar2/errorlog')
 const config = require('./config.json')
 const options = require('@mangar2/config')(config)
 
@@ -27,4 +28,8 @@ if (options.messagestore !== undefined) {
     })
 }
 broker.run()
-broker.connect('192.168.0.4', 8183)
+try {
+    broker.connect('192.168.0.4', 8183)
+} catch (error) {
+    errorLog(error)
+}

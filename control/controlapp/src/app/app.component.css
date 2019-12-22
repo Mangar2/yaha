@@ -36,6 +36,13 @@ footer a {
     align-items: center;
 }
 
+.card-img {
+    width: 64px;
+    border-radius: 10%;
+    margin-left: 0px;
+    margin-right: 20px;
+}
+
 /* Responsive Styles */
 @media screen and (max-width: 767px) {
 

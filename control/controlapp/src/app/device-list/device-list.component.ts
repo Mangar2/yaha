@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { devices } from '../devices';
 import { interval } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -16,13 +17,19 @@ export class DeviceListComponent {
     devices = devices
     deviceStatus = {}
     topicFilter = 'first'
-
-    constructor(private http: HttpClient) {
+    
+    constructor(private route: ActivatedRoute, private http: HttpClient) {
         this.readAll()
     }
 
     ngOnInit() {
         const pollForUpdate = interval(10*10 * 1000)
+        this.route.paramMap.subscribe(params => {
+            this.topicFilter = params.get('topicFilter');
+            if (this.topicFilter === null) {
+                this.topicFilter = ''
+            }
+        });
         pollForUpdate.subscribe(() => {
             this.readAll()
         })
@@ -97,7 +104,6 @@ export class DeviceListComponent {
             if (reason[0]) {
                 const timestamp = reason[0].timestamp
                 device.timestamp = timestamp
-                console.log(device.timestamp)
             }
         }
         return device

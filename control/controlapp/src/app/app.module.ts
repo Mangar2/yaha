@@ -6,18 +6,22 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { LocationPipe } from './app.pipe';
+import { LocalTimePipe } from './device/time-pipe';
 
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { LocationMenuComponent } from './location-menu/location-menu.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
-import { DeviceListComponent } from './device-list/device-detail.component';
+import { DeviceListComponent } from './device-list/device-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopBarComponent,
+    LocationMenuComponent,
     DeviceDetailsComponent,
     DeviceListComponent,
-    LocationPipe
+    LocationPipe,
+    LocalTimePipe
   ],
   imports: [
     BrowserModule,

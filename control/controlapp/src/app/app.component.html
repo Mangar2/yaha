@@ -1,0 +1,210 @@
+
+<style>
+    :host {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 14px;
+        color: #333;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    .toolbar {
+        height: 60px;
+        margin: -8px;
+        display: flex;
+        align-items: center;
+        background-color: #1976d2;
+        color: white;
+        font-weight: 600;
+    }
+
+    .toolbar img {
+        margin: 0 16px;
+    }
+
+    .content {
+        display: flex;
+        margin: 32px auto;
+        padding: 0 16px;
+        max-width: 1600px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 16px;
+    }
+
+    .card {
+        position: relative;
+        border-radius: 4px;
+        border: 1px solid #eee;
+        background-color: #fafafa;
+        height: 60px;
+        width: 400px;
+        margin: 0 8px 16px;
+        padding: 8px;
+        display: flex;
+        flex-direction: row;
+        transition: all 0.2s ease-in-out;
+        line-height: 24px;
+    }
+
+    .card-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        bottom: 10px;
+        border-radius: 4px;
+    }
+
+    .card-container .card:not(:last-child) {
+        margin-right: 0;
+    }
+
+    .card-container .card:not(.highlight-card) {
+        cursor: pointer;
+    }
+
+    .card-container .card:not(.highlight-card):hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 17px rgba(black, 0.35);
+    }
+
+    .card-container .card:not(.highlight-card):hover .material-icons path {
+        fill: rgb(105, 103, 103);
+    }
+
+    .card.highlight-card {
+        background-color: #1976d2;
+        color: white;
+        font-weight: 600;
+        border: none;
+        width: auto;
+        min-width: 30%;
+        position: relative;
+    }
+
+    .card.card.highlight-card span {
+        margin-left: 60px;
+    }
+
+    .card-img {
+        width: 64px;
+        border-radius: 10%;
+        margin-left: 0px;
+        margin-right: 20px;
+    }
+
+    .card-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #555;
+        line-height: 1.4;
+    }
+
+    .card-name.highlight-card {
+        color:#1976d2
+    }
+
+    .card-status {
+        font-size: 16px;
+        font-weight: 500;
+        color: #444;
+        line-height: 1.8;
+    }
+
+    a,
+    a:visited,
+    a:hover {
+        color: #1976d2;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #125699;
+    }
+
+    footer {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        line-height: 20px;
+    }
+
+    footer a {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Responsive Styles */
+    @media screen and (max-width: 767px) {
+
+        .card-container>*:not(.circle-link),
+        .terminal {
+            width: 100%;
+        }
+
+        .card:not(.highlight-card) {
+            height: 16px;
+            margin: 8px 0;
+        }
+
+        .card.highlight-card span {
+            margin-left: 72px;
+        }
+
+        svg#rocket-smoke {
+            right: 120px;
+            transform: rotate(-5deg);
+        }
+    }
+
+    @media screen and (max-width: 575px) {
+        svg#rocket-smoke {
+            display: none;
+            visibility: hidden;
+        }
+    }
+</style>
+
+<!-- Toolbar -->
+<div class="toolbar" role="banner">
+    <img width="16" alt="Yaha Logo" src="data:image/ico;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADe1tP84NjW/+Lb2f/l3tz/5+Hf/+nk4v/s5+X/7urp//Ht7P/z8O//9fPy//f19f/5+Pf/+/r6//z8/P/+/f7/3NPQ/N7W0//g2Nb/4tvZ/+Xe3P/n4d//6eTi/+zn5v/v6un/8e3s//Pw7//18/L/9/b1//n49//7+vr//fz8/9rRzvzc09D/AAAA/wAAAP8AAAD/AAAA/+fh3//p5OL/7Ofm/+7q6f8AAAD/AAAA/wAAAP8AAAD/+fj3//v6+f/Yz8v82tHO/wAAAP8AAAD/AAAA/wAAAP/l3tz/5+Hf/+nk4v/s5+b/AAAA/wAAAP8AAAD/AAAA//f19f/5+Pf/183J/NjPy/8AAAD/AAAA/wAAAP8AAAD/4tvZ/+Xe3P/n4d//6uTi/wAAAP8AAAD/AAAA/wAAAP/18/L/9/X1/9XLyPzWzcn/AAAA/wAAAP8AAAD/AAAA/+DY1v/i29n/5d7c/+fh3/8AAAD/AAAA/wAAAP8AAAD/8/Dv//Xz8v8AAAD/1cvH/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA//Ht7P8AAAD/AAAA/wAAAP/Vy8f/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/+zn5v8AAAD/AAAA/9TJxvwAAAD/AAAA/9XLx/8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/+fh3/8AAAD/AAAA/+7q6f/Uycb81MnG/wAAAP8AAAD/1cvH/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/+Lb2f8AAAD/AAAA/+rk4v/s5+X/1MnG/NTJxv/Uycb/AAAA/wAAAP/Vy8f/AAAA/wAAAP8AAAD/AAAA/97W0/8AAAD/AAAA/+Xe3P/n4d//6eTi/9TKxvzUysb/1MnG/9TKxv8AAAD/AAAA/9XLx/8AAAD/AAAA/9rRzv8AAAD/AAAA/+DY1v/i29n/5d7c/+fh3//Uysb81MnG/9TKxv/Uysb/1MrG/wAAAP8AAAD/1cvH/9bNyf8AAAD/AAAA/9zT0P/e1tP/4NjW/+Lb2f/k3tz/1MnG/NTJxv/Uysb/1MnG/9TKxv/Uycb/AAAA/wAAAP8AAAD/AAAA/9jPy//a0c7/3NPQ/97W0//g2Nb/4tvZ/9TJxvzUycb/1MnG/9TJxv/Uycb/1MnG/9TJxv8AAAD/AAAA/9XLx//Xzcn/2M/L/9rRzf/c09D/3tbT/+DY1f/Uycb81MrG/9TJxv/Uysb/1MrG/9TKxv/Uysb/1MrG/9TKxv/Uysb/1cvI/9fNyf/Yz8v/2tHO/9zT0P/e1tP/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" />
+    <div class="spacer"></div>
+</div>
+
+<div class="content" role="main">
+
+    <!-- Cards -->
+
+    <div class="card-container">
+        <a class="card" *ngFor="let device of devices | location: topicFilter" (click)="onClick(device)">
+            <img class="card-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
+            <div class="card-text">
+                <span class="card-name">{{ device.name }}</span>
+                <br>
+                <span class="card-status">{{ device.value }}</span>
+            </div>
+            <button class="card-button" (click)="details(device)">></button>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Is your home really smart? Mangar2/yaha on github&nbsp;
+    </footer>
+
+</div>

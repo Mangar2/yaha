@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { interval } from 'rxjs';
+import { interval, Observable } from 'rxjs';
 
 import { updateDevice } from '../device/device';
 
 import { devices } from '../devices';
 import { setDeviceValue } from '../device/communication';
+import { ApiService } from '../service/api.service';
+import { DeviceInfo, History } from '../service/deviceinfo';
 
 @Component({
     selector: 'app-device-details',
@@ -16,27 +18,32 @@ import { setDeviceValue } from '../device/communication';
 
 export class DeviceDetailsComponent implements OnInit {
     device: any
+    history: History
+    subscription: any
 
-    constructor(private route: ActivatedRoute, private http: HttpClient) { }
+    constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService) { 
+    }
 
     /**
-     * Gets data from a topic and its subtopics
-     * @param topic topic to read data from
-     * @param history true, to add historical data
+     * Read data from the server based on a topic
+     * @param topic topic to fetch data for
+     * @param history true, to add the history
      */
-    readSingle (topic: string, history: boolean): void {
-        const data = {
-            topic: topic,
-            history: history
-        }
-        this.http.post<any>("api/Arduino/NodeJs/html/sensor.php", data, {}).
-            subscribe((data) => {
+    getDeviceFromApi(topic: string, history: boolean) {
+        this.deviceApi.getDevice(topic, history).
+            subscribe(resp => {
+                console.log(resp)
+                const data = resp.body
                 if (data && data.payload && data.payload.current) {
                     const device = this.getDevice(topic)
-                    updateDevice(topic, device, data)                    
+                    updateDevice(topic, device, data)   
+                    if (data.payload.history) {
+                        history = data.payload.history
+                    }                 
                 }
             })
     }
+
 
     onClick (device, value): void {
         setDeviceValue(this.http, device.topic, value)
@@ -64,13 +71,20 @@ export class DeviceDetailsComponent implements OnInit {
         });
         
         if (this.device.topic) {
-            this.readSingle(this.device.topic, true)
-            const pollForUpdate = interval(1000 * 10)
-            pollForUpdate.subscribe(() => {
-                this.readSingle(this.device.topic, true)        
+            this.getDeviceFromApi(this.device.topic, true)
+            const pollForUpdate = interval(2 * 1000)
+            this.subscription = pollForUpdate.subscribe(() => {
+                console.log("detail update");
+                this.getDeviceFromApi(this.device.topic, true)
             })
         }
         
+    }
+
+    ngOnDestroy() {
+        if (this.subscription !== undefined) {
+            this.subscription.unsubscribe();
+        }
     }
 
 }

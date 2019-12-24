@@ -1,20 +1,24 @@
 
-<div class="card-container">
+<div class="detail-container">
 
-    <div class="large-card" *ngIf="device">
-        <div class = "card-line">
-            <img class="card-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
+    <div class="detail-card" *ngIf="device">
+        <div class = "detail-header">
+            <img class="detail-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
             <h2>{{ device.name }}</h2>
         </div>
-        <div class = "card-spacer"></div>
-        <div class = "card-line">
-            <span class="card-label">status</span><span class="card-text">{{ device.value }}</span>
+        <div class = "detail-data" *ngIf="device.reason">
+            <div class = "detail-data-row">
+                <span class="detail-label">status</span><span class="detail-text">{{ device.value }}</span>
+            </div>    
+            <div class = "detail-data-row" *ngFor="let reason of device.reason; index as i">
+                <span class="detail-label">{{ reason.timestamp | localTime:i }}</span>
+                <span class="detail-text">{{ reason.message }}</span>
+            </div>
         </div>
-        <div class = "card-line">
-            <span class="card-label">change</span><span class="card-text">{{ device.timestamp | localTime }}</span>
-        </div>
-        <div class="card-line" *ngFor="let action of device.actions">
-            <a>{{action}}</a>
+        <div class="detail-buttons">
+            <a class = "detail-button" (click)="onClick(device, action)" [class.active]="action === device.value" *ngFor="let action of device.actions"  >
+                {{action}}
+            </a>
         </div>
     </div>
 

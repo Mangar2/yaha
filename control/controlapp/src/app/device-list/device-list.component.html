@@ -1,17 +1,20 @@
-<!-- Cards -->
+<div class="sub-content" role="main">
+    <app-location-menu></app-location-menu>
 
-<div class="card-container">
-    <div class="card" *ngFor="let device of devices | location: topicFilter">
-        <a class="card-clickable" (click)="onClick(device)">
-            <img class="card-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
-            <div class="card-text">
-                <span class="card-name">{{ device.name }}</span>
-                <br>
-                <span class="card-status">{{ device.value }}</span>
-            </div>
-        </a>
-        <a class="card-details" [routerLink]="['/devicedetails', 1]">
-            >
-        </a>
+    <!-- Cards -->
+    <div class="card-container">
+        <div class="card" *ngFor="let device of devices | location: topicFilter">
+            <a class="card-clickable" (click)="onClick(device)">
+                <img class="card-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
+                <div class="card-text">
+                    <span class="card-name">{{ device.name }}</span>
+                    <br>
+                    <span class="card-status">{{ device.value }}</span>
+                </div>
+            </a>
+            <a class="card-details" [routerLink]="['/devicedetails', device.topic]">
+                >
+            </a>
+        </div>
     </div>
 </div>

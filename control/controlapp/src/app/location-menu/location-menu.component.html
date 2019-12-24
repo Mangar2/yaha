@@ -1,3 +1,9 @@
-<a href="/devicelist">all</a>
-<a href="/devicelist/ground">ground</a>
-<a href="/devicelist/first">first</a>
+<div class='nav-container'>
+    <nav class='nav'>
+        <a class='nav-item' [routerLink]="['/devicelist']" >all</a>
+        <a class='nav-item' [routerLink]="['/devicelist/cellar']">cellar</a>
+        <a class='nav-item' [routerLink]="['/devicelist/ground']">ground</a>
+        <a class='nav-item' [routerLink]="['/devicelist/first']">first</a>
+        <a class='nav-item' [routerLink]="['/devicelist/outdoor']">outdoor</a>
+    </nav>
+</div>

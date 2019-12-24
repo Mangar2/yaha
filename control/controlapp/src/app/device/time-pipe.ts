@@ -10,15 +10,15 @@ export class LocalTimePipe implements PipeTransform {
         return date.setHours(0,0,0,0) === todaysDate.setHours(0,0,0,0);
     }
     
-    transform(dateAsString: string): string {
+    transform(dateAsString: string, index: number): string {
         let date = new Date(dateAsString)
         if (dateAsString === undefined || dateAsString === "" || isNaN(date.getTime())) {
             return 'unknown'
         }
         const timeStr = date.toLocaleTimeString()
         const dateStr = this.isToday(date) ? 'Today' :
-            date.toLocaleDateString('', {day: "2-digit", month: "2-digit", year: "2-digit"} )
-        const result = dateStr + ", " + timeStr;
+            date.toLocaleDateString('de-DE', {day: "2-digit", month: "2-digit", year: "2-digit"} )
+        const result = index === 0 ? dateStr + ", " + timeStr : timeStr;
         return result
     }
 

@@ -30,6 +30,7 @@ export class DeviceListComponent {
                 this.topicFilter = ''
             }
         });
+        this.readAll()
         pollForUpdate.subscribe(() => {
             this.readAll()
         })
@@ -100,10 +101,9 @@ export class DeviceListComponent {
                 const isOn = (value === 'on' || value === 'true' || value === true || value === '1' || value === 1)
                 device.value = isOn ? 'on' : 'off'
             }
-            const reason = data.payload.current.reason
-            if (reason[0]) {
-                const timestamp = reason[0].timestamp
-                device.timestamp = timestamp
+            device.reason = data.payload.current.reason
+            if (!Array.isArray(device.reason)) {
+                device.reason = [{ timestamp: 'unknown' }]
             }
         }
         return device

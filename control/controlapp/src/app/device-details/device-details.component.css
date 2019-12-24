@@ -1,32 +1,48 @@
-.card-container {
-    display: block;
-    flex-wrap: wrap;
+.detail-container {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
-    margin-top: 16px;
 }
 
-.large-card {
-    position: relative;
+.detail-card {
+    display: flex;
+    flex-direction: column;
     border-radius: 4px;
     border: 1px solid #eee;
     background-color: #fafafa;
-    height: 400px;
-    width: inherit;
-    margin: 16px 0 16px;
+    height: auto;
+    width: 400px;
     padding: 8px;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.2s ease-in-out;
-    line-height: 24px;
 }
 
-.card-line {
+.detail-header {
     display: flex;
     flex-direction: row;
-    width: 100;
+    height: auto;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.card-img {
+.detail-data {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.detail-data-row {
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    justify-content: space-between;
+}
+
+.detail-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.detail-img {
     width: 64px;
     height: 64px;
     border-radius: .25rem;
@@ -34,27 +50,48 @@
     margin-right: 20px;
 }
 
-.card-spacer {
-    height: 30px;
+.detail-header {
+    width: 70%;
 }
 
-.card-label, .card-text {
+.detail-label, .detail-text, .detail-button {
     font-size: 15px;
     font-weight: 500;
-    margin: 0 0 6px 0;
+    margin-bottom: 6px;
     padding: 3px 5px 3px 5px;
-    color: #495057;
-}
-.card-label {
-    width: 100px;
-    text-align: left;
 }
 
-.card-text {
+.detail-label, .detail-text {
+    color: #495057;
+}
+
+.detail-text, .detail-button {
     border-radius: 4px;
-    flex: 0 0 70%;
-    max-width: 70%;
+}
+
+.detail-label {
+    width: 25%;
+}
+
+.detail-text {
+    width: 70%;
     background-color: #e9ecef;
     border: 1px solid #ced4da;
 }
 
+.detail-button {
+    text-align: center;
+    background-color: #6c757d;
+    border-color: #007bff;
+    color: #fff;
+    line-height: 40px;
+    height: 40px;
+}
+
+.detail-button:hover {
+    cursor: pointer;
+}
+
+.active {
+    background-color: #007bff;
+}

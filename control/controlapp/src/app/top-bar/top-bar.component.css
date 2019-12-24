@@ -2,6 +2,10 @@
     flex: 1;
 }
 
+.toolbar img {
+    margin: 0 16px;
+}
+
 .toolbar {
     height: 60px;
     margin: -8px;

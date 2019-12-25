@@ -181,6 +181,24 @@ export const devices = [
         name: "Lights on pathway",
         topic: "outdoor/garden/fs20/switch/light pathway",
         ...pictures.lightPathway
+    },
+    {
+        ...deviceOnOff,
+        name: "Lexmark laser printer",
+        topic: "first/study/zwave/switch/laserprinter",
+        ...pictures.printer
+    },
+    {
+        ...deviceOnOff,
+        name: "Regina's computer",
+        topic: "first/study/zwave/switch/pcregina",
+        ...pictures.computerTower
+    },
+    {
+        ...deviceOnOff,
+        name: "Volker's computer",
+        topic: "first/study/zwave/switch/pcvolker",
+        ...pictures.computerTower
     }
     /*,    
     { 

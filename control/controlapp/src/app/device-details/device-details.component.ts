@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { interval, Observable } from 'rxjs';
+import { interval } from 'rxjs';
 
-import { updateDevice } from '../device/device';
+import { updateDevice, getDevice } from '../device/device';
 
-import { devices } from '../devices';
 import { setDeviceValue } from '../device/communication';
 import { ApiService } from '../service/api.service';
-import { DeviceInfo, History } from '../service/deviceinfo';
+import { History } from '../service/deviceinfo';
 
 @Component({
     selector: 'app-device-details',
@@ -29,13 +28,12 @@ export class DeviceDetailsComponent implements OnInit {
      * @param topic topic to fetch data for
      * @param history true, to add the history
      */
-    getDeviceFromApi(topic: string, history: boolean) {
+    updateDeviceFromApi(topic: string, history: boolean) {
         this.deviceApi.getDevice(topic, history).
             subscribe(resp => {
-                console.log(resp)
                 const data = resp.body
                 if (data && data.payload && data.payload.current) {
-                    const device = this.getDevice(topic)
+                    const device = getDevice(topic)
                     updateDevice(topic, device, data)   
                     if (data.payload.history) {
                         history = data.payload.history
@@ -49,33 +47,18 @@ export class DeviceDetailsComponent implements OnInit {
         setDeviceValue(this.http, device.topic, value)
     }
 
-    /**
-     * Searches the devices for a topic
-     * @param topic 
-     */
-    getDevice (topic: string): any {
-        let result = {}
-        for(const device of devices) {
-            if (device.topic === topic) {
-                result = device
-                break
-            }
-        }
-        return result
-    }
-
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
             const deviceTopic = params.get('deviceTopic')
-            this.device = this.getDevice(deviceTopic)
+            this.device = getDevice(deviceTopic)
         });
         
         if (this.device.topic) {
-            this.getDeviceFromApi(this.device.topic, true)
+            this.updateDeviceFromApi(this.device.topic, true)
             const pollForUpdate = interval(2 * 1000)
             this.subscription = pollForUpdate.subscribe(() => {
                 console.log("detail update");
-                this.getDeviceFromApi(this.device.topic, true)
+                this.updateDeviceFromApi(this.device.topic, true)
             })
         }
         

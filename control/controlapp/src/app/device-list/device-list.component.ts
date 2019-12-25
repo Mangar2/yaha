@@ -17,13 +17,14 @@ export class DeviceListComponent {
     devices = devices
     deviceStatus = {}
     topicFilter = 'first'
+    subscription: any
     
     constructor(private route: ActivatedRoute, private http: HttpClient) {
         this.readAll()
     }
 
     ngOnInit() {
-        const pollForUpdate = interval(10*10 * 1000)
+        const pollForUpdate = interval(10 * 1000)
         this.route.paramMap.subscribe(params => {
             this.topicFilter = params.get('topicFilter');
             if (this.topicFilter === null) {
@@ -31,7 +32,8 @@ export class DeviceListComponent {
             }
         });
         this.readAll()
-        pollForUpdate.subscribe(() => {
+        this.subscription = pollForUpdate.subscribe(() => {
+            console.log('Read to ' + this.topicFilter);
             this.readAll()
         })
     }
@@ -145,6 +147,12 @@ export class DeviceListComponent {
                         this.updateDevice(device.topic, device, data)
                     })
             }
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.subscription !== undefined) {
+            this.subscription.unsubscribe();
         }
     }
 

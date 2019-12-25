@@ -11,7 +11,7 @@
                 <span class="detail-label">status</span><span class="detail-text">{{ device.value }}</span>
             </div>    
             <div class = "detail-data-row" *ngFor="let reason of device.reason; index as i">
-                <span class="detail-label">{{ reason.timestamp | localTime:i }}</span>
+                <span class="detail-label">{{ reason.timestamp | localTime:i===0 }}</span>
                 <span class="detail-text">{{ reason.message }}</span>
             </div>
         </div>
@@ -21,5 +21,7 @@
             </a>
         </div>
     </div>
+
+    <app-device-history></app-device-history>
 
 </div>

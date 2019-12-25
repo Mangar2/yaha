@@ -1,0 +1,20 @@
+<div class="history-container ">
+    <span class="history-label"><h2>History</h2></span>
+    <div class="history" *ngIf="history">
+        <table class="table-striped">
+            <thead>
+                <tr>
+                    <th>value</th>
+                    <th>reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let entry of device.history">
+                    <td>{{entry.value}}</td>
+                    <td>{{entry.reason | reasonToText }}</td>
+                </tr>        
+            </tbody>
+        </table>
+    </div>
+
+</div>

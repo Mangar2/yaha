@@ -10,7 +10,7 @@ export class LocalTimePipe implements PipeTransform {
         return date.setHours(0,0,0,0) === todaysDate.setHours(0,0,0,0);
     }
     
-    transform(dateAsString: string, index: number): string {
+    transform(dateAsString: string, addDate: boolean): string {
         let date = new Date(dateAsString)
         if (dateAsString === undefined || dateAsString === "" || isNaN(date.getTime())) {
             return 'unknown'
@@ -18,7 +18,7 @@ export class LocalTimePipe implements PipeTransform {
         const timeStr = date.toLocaleTimeString()
         const dateStr = this.isToday(date) ? 'Today' :
             date.toLocaleDateString('de-DE', {day: "2-digit", month: "2-digit", year: "2-digit"} )
-        const result = index === 0 ? dateStr + ", " + timeStr : timeStr;
+        const result = addDate ? dateStr + ", " + timeStr : timeStr;
         return result
     }
 

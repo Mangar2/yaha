@@ -1,7 +1,6 @@
 import { pictures } from './pictures/pictures'
 
 const deviceOnOff = {
-    value: '',
     reason: [],
     actions: ['on', 'off']
 }
@@ -13,7 +12,6 @@ const light = {
 }
 
 const measured =  {
-    value: '',
     reason: [],
     actions: [],
     properties: ['measured']

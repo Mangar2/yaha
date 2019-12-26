@@ -15,6 +15,7 @@ import { DeviceDetailsComponent } from './device-details/device-details.componen
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceHistoryComponent } from './device-history/device-history.component';
 import { RootMenuComponent } from './root-menu/root-menu.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { RootMenuComponent } from './root-menu/root-menu.component';
     LocalTimePipe,
     ReasonToTextPipe,
     DeviceHistoryComponent,
-    RootMenuComponent
+    RootMenuComponent,
+    BreadcrumbComponent
   ],
   imports: [
     BrowserModule,

@@ -45,11 +45,10 @@ export class ApiService {
      */
     publish (topic: string, value: string ): Observable<HttpResponse<PublishResult>> {
         const data = {
-            topic: topic,
+            topic: topic + '/set',
             value: value,
             timestamp: (new Date()).toISOString()
         }
-
         return this.http.post<PublishResult>("api/Arduino/NodeJs/html/publish.php", data, { observe: 'response' });
     }
 

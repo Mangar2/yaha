@@ -7,7 +7,7 @@
     <div class="card-container">
         <div class="card" *ngFor="let device of devices | location: topicFilter">
             <a class="card-clickable" (click)="onClick(device)">
-                <img class="card-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
+                <img class="card-img" width="64" *ngIf='device.value' alt="bild" [src]="device[device.value] ? device[device.value] : device['on']" />
                 <div class="card-text">
                     <span class="card-name">{{ device.name }}</span>
                     <br>

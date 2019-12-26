@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Device, Message, getDevice } from '../device/device';
-import { ReasonToTextPipe } from '../device/reason-pipe'
+import { Device, Message, DeviceStorage  } from '../device/device';
 
 @Component({
     selector: 'app-device-history',
@@ -13,13 +12,13 @@ export class DeviceHistoryComponent implements OnInit {
     device: Device
     history: Message[] = []
 
-    constructor(private route: ActivatedRoute) {
+    constructor(private route: ActivatedRoute, private deviceStorage: DeviceStorage) {
     }
 
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
             this.deviceTopic = params.get('deviceTopic')
-            this.device = getDevice(this.deviceTopic)
+            this.device = this.deviceStorage.getDevice(this.deviceTopic)
         });
     }
 

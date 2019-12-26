@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { interval } from 'rxjs';
+import { timer } from 'rxjs';
 
-import { updateDevice, getDevice } from '../device/device';
+import { DeviceStorage } from '../device/device';
 
-import { setDeviceValue } from '../device/communication';
 import { ApiService } from '../service/api.service';
 import { History } from '../service/deviceinfo';
 
@@ -20,7 +19,7 @@ export class DeviceDetailsComponent implements OnInit {
     history: History
     subscription: any
 
-    constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService) { 
+    constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService, private deviceStorage: DeviceStorage) { 
     }
 
     /**
@@ -33,8 +32,8 @@ export class DeviceDetailsComponent implements OnInit {
             subscribe(resp => {
                 const data = resp.body
                 if (data && data.payload && data.payload.current) {
-                    const device = getDevice(topic)
-                    updateDevice(topic, device, data)   
+                    const device = this.deviceStorage.getDevice(topic)
+                    this.deviceStorage.updateDevice(topic, device, data)   
                     if (data.payload.history) {
                         history = data.payload.history
                     }                 
@@ -42,20 +41,20 @@ export class DeviceDetailsComponent implements OnInit {
             })
     }
 
-
     onClick (device, value): void {
-        setDeviceValue(this.http, device.topic, value)
+        this.deviceApi.publish(device.topic, value).subscribe(resp => {
+            console.log(resp)
+        })
     }
 
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
             const deviceTopic = params.get('deviceTopic')
-            this.device = getDevice(deviceTopic)
+            this.device = this.deviceStorage.getDevice(deviceTopic)
         });
         
         if (this.device.topic) {
-            this.updateDeviceFromApi(this.device.topic, true)
-            const pollForUpdate = interval(2 * 1000)
+            const pollForUpdate = timer(0, 2 * 1000)
             this.subscription = pollForUpdate.subscribe(() => {
                 console.log("detail update");
                 this.updateDeviceFromApi(this.device.topic, true)

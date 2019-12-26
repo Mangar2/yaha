@@ -20,7 +20,7 @@
     border: 1px solid #eee;
     background-color: #fafafa;
     height: 60px;
-    width: 350px;
+    min-width: 350px;
     max-width: 500px;
     margin: 0 8px 8px;
     padding: 8px;

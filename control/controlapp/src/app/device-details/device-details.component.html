@@ -3,7 +3,7 @@
 
     <div class="detail-card" *ngIf="device">
         <div class = "detail-header">
-            <img class="detail-img" width="64" alt="bild" [src]="device.value ? device[device.value] : device['on']" />
+            <img class="detail-img" width="64" alt="bild" [src]="device[device.value] ? device[device.value] : device['on']" />
             <span class="detail-headline">{{ device.name }}</span>
         </div>
         <div class = "detail-data" *ngIf="device.reason">

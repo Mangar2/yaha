@@ -1,5 +1,8 @@
 .sub-container {
     display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
     width: 1200px;
     min-width: 320px;
     margin: 32px auto;

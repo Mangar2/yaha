@@ -1,5 +1,4 @@
 .nav-container {
-    border: 1px solid #fff;
     display: flex;
     flex-direction: column;
     justify-self: flex-start;

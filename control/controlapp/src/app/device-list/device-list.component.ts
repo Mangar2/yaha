@@ -28,6 +28,8 @@ export class DeviceListComponent {
         const pollForUpdate = timer(5 * 1000, 10 * 1000)
         this.route.paramMap.subscribe(params => {
             this.topicFilter = params.get('topicFilter');
+            this.topicFilter = this.topicFilter.replace('%2F', '/')
+            console.log(this.topicFilter)
             if (this.topicFilter === null) {
                 this.topicFilter = ''
             }

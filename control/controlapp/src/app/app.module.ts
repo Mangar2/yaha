@@ -14,6 +14,7 @@ import { LocationMenuComponent } from './location-menu/location-menu.component';
 import { DeviceDetailsComponent } from './device-details/device-details.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceHistoryComponent } from './device-history/device-history.component';
+import { RootMenuComponent } from './root-menu/root-menu.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DeviceHistoryComponent } from './device-history/device-history.componen
     LocationPipe,
     LocalTimePipe,
     ReasonToTextPipe,
-    DeviceHistoryComponent
+    DeviceHistoryComponent,
+    RootMenuComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Device } from './device'
+import { Device } from './device/device'
 
 @Pipe({
   name: 'location'

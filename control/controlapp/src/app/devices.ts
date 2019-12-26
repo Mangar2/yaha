@@ -304,17 +304,41 @@ export const devices = [
         ...measured,
         name: "outside temperature",
         topic: "outdoor/garden/main/weather/temperature",
+        properties: ['measured', 'favorit'],
         ...pictures.temerature
     },
     {
         ...measured,
         name: "outside pressure",
-        topic: "outdoor/garden/main/weather/pressure"
+        topic: "outdoor/garden/main/weather/pressure",
+        ...pictures.pressure
     },
     {
         ...measured,
         name: "outside humidity",
-        topic: "outdoor/garden/main/weather/humidity"
+        topic: "outdoor/garden/main/weather/humidity",
+        ...pictures.humidity
+    },
+    {
+        ...measured,
+        name: "power consumption",
+        topic: "solar/consumption",
+        properties: ['measured', 'favorit'],
+        ...pictures.consumption
+    },
+    {
+        ...measured,
+        name: "solar power feed in",
+        topic: "solar/feedin",
+        properties: ['measured', 'favorit'],
+        ...pictures.feedin
+    },
+    {
+        ...measured,
+        name: "solar power yield",
+        topic: "solar/solar yield",
+        properties: ['measured', 'favorit'],
+        ...pictures.solaryield
     }
     /*,    
     { 

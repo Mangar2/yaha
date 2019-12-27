@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { devices } from '../devices';
-import { timer } from 'rxjs';
+import { timer, Observable, forkJoin } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ApiService } from '../service/api.service';
 
@@ -17,11 +17,10 @@ export class DeviceListComponent {
     title = 'yaha Smart Home'
     devices = devices
     deviceStatus = {}
-    topicFilter = 'first'
+    topicFilter
     subscription: any
         
     constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService,  private deviceStorage: DeviceStorage) {
-        this.readAll()
     }
 
     ngOnInit() {
@@ -62,27 +61,58 @@ export class DeviceListComponent {
         this.deviceApi.getDevice(topic, history).
             subscribe(resp => {
                 const data = resp.body
-                if (data && data.payload && data.payload.current) {
-                    const device = this.deviceStorage.getDevice(topic)
-                    this.deviceStorage.updateDevice(topic, device, data)   
-                    if (data.payload.history) {
-                        history = data.payload.history
-                    }                 
-                }
+                const device = this.deviceStorage.getDevice(topic)
+                this.deviceStorage.updateDevice(topic, device, data)   
             })
     }
 
     /**
+     * Adds a list of http responses to the device storage
+     */
+    addResponsesToDeviceStorage(httpResponses: any[]) {
+        for (let resp of httpResponses) {
+            const data = resp.body
+            this.deviceStorage.replaceMany(data.payload)
+        }
+    }
+
+    /**
+     * Get the base topic of a topic (limited to level of subelements)
+     * @param topic topic
+     * @param level amount of subelements
+     */
+    getTopicBase(topic: string, level: number) {
+        const topicArray = topic.split('/')
+        if (level > topicArray.length-1) {
+            level = topicArray.length - 1
+        }
+        const result = topicArray.slice(0, level).join('/')
+        return result
+    }
+
+    /**
      * Gets data from a topic and its subtopics
-     * @param topic topic to read data from
-     * @param history true, to add historical data
      */
     readAll (): void {
+        const topicBases = []
+        const observables = []
         for (const device of devices) {
             if (device.topic.startsWith(this.topicFilter)) {
-                this.updateDeviceFromApi(device.topic, false)
+                observables.push(this.deviceApi.getDevice(device.topic, false))
+                const topicBase = this.getTopicBase(device.topic, 3)
+                if (!topicBases.includes(topicBase)) {
+                    topicBases.push(topicBase)
+                }
             }
         }
+        forkJoin(observables).subscribe((responses) => {
+            this.addResponsesToDeviceStorage(responses)
+            for (const device of devices) {
+                if (device.topic.startsWith(this.topicFilter)) {
+                    this.deviceStorage.replaceDevice(device.topic)
+                }
+            }
+        })
     }
 
     ngOnDestroy() {

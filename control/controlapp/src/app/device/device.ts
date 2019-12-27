@@ -13,6 +13,8 @@
 
 import { Injectable } from '@angular/core';
 import { devices } from '../devices';
+import { ɵangular_packages_platform_browser_dynamic_platform_browser_dynamic_a } from '@angular/platform-browser-dynamic';
+import { StringMapWithRename } from '@angular/compiler/src/compiler_facade_interface';
 
 export interface Reason {
     timestamp: string;
@@ -40,7 +42,27 @@ export interface Device {
  */
 export interface StorageNode extends Device{
      childs: { [key:string]: StorageNode }
- }
+}
+
+/**
+ * Payload read from server
+ */
+interface Payload {
+
+}
+
+interface link {
+    rel: string
+    href: string
+}
+
+/**
+ * Data read from server
+ */
+interface ServerData {
+    links: link[]
+    payload: Payload
+}
 
  /**
   * Device storage
@@ -49,6 +71,9 @@ export interface StorageNode extends Device{
     providedIn: 'root',
 })
 export class DeviceStorage {
+
+    tree : StorageNode = { childs: {} }
+
     /**
      * Updates the device
      * @param topic topic of the device
@@ -57,6 +82,7 @@ export class DeviceStorage {
      */
     updateDevice(topic: string, device: Device, data: any): Device {
         if (data && data.payload && data.payload.current) {
+            this.replaceMany(data.payload)
             if (data.payload.current.topic === topic) {
                 const value = data.payload.current.value
                 if (device.actions.includes('on')) {
@@ -91,7 +117,28 @@ export class DeviceStorage {
         return result
     }
 
-    tree: StorageNode = { childs: {} }
+    /**
+     * Replace the device info
+     */
+    replaceDevice (topic: string) {
+        const device = this.getDevice(topic)
+        const node = this.getNode(topic)
+        if (node !== undefined) {
+            const value = node.value
+            if (device.actions.includes('on')) {
+                const isOn = (value === 'on' || value === 'true' || Number(value) > 0)
+                device.value = isOn ? 'on' : 'off'
+            } else {
+                device.value = value
+            }
+            if (Array.isArray(node.reason)) {
+                device.reason = node.reason
+            }
+            if (Array.isArray(node.history)) {
+                device.history = node.history
+            }
+        }
+    }
 
     /**
      * Searches for a topic in a topic tree
@@ -105,10 +152,9 @@ export class DeviceStorage {
        if (topicChunks[0] === '') {
            topicChunks.shift()
        }
-       
        for (const topicChunk of topicChunks) {
-           node = node.childs[topicChunk]
-           if (node === undefined) {
+            node = node.childs[topicChunk]
+            if (node === undefined) {
                break
            }
        }
@@ -125,12 +171,11 @@ export class DeviceStorage {
        if (topicChunks[0] === '') {
            topicChunks.shift()
        }
-       
        for (const topicChunk of topicChunks) {
-           node = node.childs[topicChunk]
-           if (node === undefined) {
-               node = node.childs[topicChunk] = { childs: {} }
+           if (node.childs[topicChunk] === undefined) {
+               node.childs[topicChunk] = { childs: {} }
            } 
+           node = node.childs[topicChunk]
        }
        return node
     }
@@ -147,6 +192,22 @@ export class DeviceStorage {
         node.reason = reason
         if (Array.isArray(history)) {
             node.history = history
+        }
+    }
+    
+    /**
+     * Replaces many nodes by data read from server
+     * @param data data read from server
+     */
+    public replaceMany(payload: any) {
+        if (payload && payload.current) {
+            this.replaceNode(payload.current.topic, payload.current.value, payload.current.reason, payload.history);
+        }
+        for (let index in payload) {
+            if (index !== 'current' && index !== 'statistics' && index !== 'history' && index !== 'set') {
+                const child = payload[index]
+                this.replaceMany(child)
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ interface Payload {
  * Data structure to transport information about devices
  */
 export interface DeviceInfo {
-    links: Links;
+    links: Links[];
     payload: Payload;
 }
 

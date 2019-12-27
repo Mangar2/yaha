@@ -22,7 +22,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { console.log("api created") }
 
     /**
      * Gets device infos from the server
@@ -34,7 +34,7 @@ export class ApiService {
             topic: topic,
             history: history
         }
-        return this.http.post<DeviceInfo>("api/Arduino/NodeJs/html/sensor.php", data, { observe: 'response' });
+        return this.http.post<DeviceInfo>("angular/api/sensor.php", data, { observe: 'response' });
     }
 
     /**
@@ -49,7 +49,7 @@ export class ApiService {
             value: value,
             timestamp: (new Date()).toISOString()
         }
-        return this.http.post<PublishResult>("api/Arduino/NodeJs/html/publish.php", data, { observe: 'response' });
+        return this.http.post<PublishResult>("angular/api/publish.php", data, { observe: 'response' });
     }
 
 }

@@ -6,7 +6,7 @@ import { timer } from 'rxjs';
 import { DeviceStorage } from '../device/device';
 
 import { ApiService } from '../service/api.service';
-import { History } from '../service/deviceinfo';
+import { History } from '../device/device';
 
 @Component({
     selector: 'app-device-details',
@@ -16,7 +16,6 @@ import { History } from '../service/deviceinfo';
 
 export class DeviceDetailsComponent implements OnInit {
     device: any
-    history: History
     subscription: any
 
     constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService, private deviceStorage: DeviceStorage) { 
@@ -31,12 +30,10 @@ export class DeviceDetailsComponent implements OnInit {
         this.deviceApi.getDevice(topic, history).
             subscribe(resp => {
                 const data = resp.body
-                if (data && data.payload && data.payload.current) {
+                if (data && data.payload) {
+                    const deviceInfo = data.payload[topic]
                     const device = this.deviceStorage.getDevice(topic)
-                    this.deviceStorage.updateDevice(topic, device, data)   
-                    if (data.payload.history) {
-                        history = data.payload.history
-                    }                 
+                    this.deviceStorage.updateDevice(topic, device, deviceInfo)   
                 }
             })
     }

@@ -10,7 +10,6 @@ import { Device, Message, DeviceStorage  } from '../device/device';
 export class DeviceHistoryComponent implements OnInit {
     deviceTopic: string
     device: Device
-    history: Message[] = []
 
     constructor(private route: ActivatedRoute, private deviceStorage: DeviceStorage) {
     }

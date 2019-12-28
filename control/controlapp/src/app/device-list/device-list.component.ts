@@ -61,8 +61,9 @@ export class DeviceListComponent {
         this.deviceApi.getDevice(topic, history).
             subscribe(resp => {
                 const data = resp.body
+                const deviceInfo = data.payload[topic]
                 const device = this.deviceStorage.getDevice(topic)
-                this.deviceStorage.updateDevice(topic, device, data)   
+                this.deviceStorage.updateDevice(topic, device, deviceInfo)   
             })
     }
 
@@ -106,6 +107,7 @@ export class DeviceListComponent {
             }
         }
         forkJoin(observables).subscribe((responses) => {
+            console.log(responses)
             this.addResponsesToDeviceStorage(responses)
             for (const device of devices) {
                 if (device.topic.startsWith(this.topicFilter)) {

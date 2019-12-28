@@ -13,8 +13,6 @@
 
 import { Injectable } from '@angular/core';
 import { devices } from '../devices';
-import { ɵangular_packages_platform_browser_dynamic_platform_browser_dynamic_a } from '@angular/platform-browser-dynamic';
-import { StringMapWithRename } from '@angular/compiler/src/compiler_facade_interface';
 
 export interface Reason {
     timestamp: string;
@@ -27,12 +25,18 @@ export interface Message {
     reason?: Reason[];
 }
 
+export interface History {
+    time?: string;
+    value?: string;
+    reason?: Reason[]
+}
+
 export interface Device {
     name?: string
     topic?: string
     value?: string
     reason?: Reason[]
-    history?: Message[]
+    history?: History[]
     actions?: string[]
     properties?: string[]
 }
@@ -44,24 +48,23 @@ export interface StorageNode extends Device{
      childs: { [key:string]: StorageNode }
 }
 
+
+/**
+ * Information structure for a device coming from the server
+ */
+interface DeviceInfo {
+    topic: string
+    time: string
+    value: string
+    reason?: Reason[]
+    history?: History[]
+}
+
 /**
  * Payload read from server
  */
-interface Payload {
-
-}
-
-interface link {
-    rel: string
-    href: string
-}
-
-/**
- * Data read from server
- */
-interface ServerData {
-    links: link[]
-    payload: Payload
+export interface Payload {
+    childs: { [key:string]: DeviceInfo }
 }
 
  /**
@@ -80,24 +83,29 @@ export class DeviceStorage {
      * @param device the device object
      * @param data data read from server
      */
-    updateDevice(topic: string, device: Device, data: any): Device {
-        if (data && data.payload && data.payload.current) {
-            this.replaceMany(data.payload)
-            if (data.payload.current.topic === topic) {
-                const value = data.payload.current.value
+    updateDevice(topic: string, device: Device, deviceInfo: DeviceInfo): Device {
+        if (deviceInfo) {
+            if (deviceInfo.topic === topic) {
+                const value = deviceInfo.value
                 if (device.actions.includes('on')) {
-                    const isOn = (value === 'on' || value === 'true' || value === true || Number(value) > 0)
+                    const isOn = (value === 'on' || value === 'true' || Number(value) > 0)
                     device.value = isOn ? 'on' : 'off'
                 } else {
                     device.value = value
                 }
             }
-            if (Array.isArray(data.payload.current.reason)) {
-                device.reason = data.payload.current.reason
+            if (Array.isArray(deviceInfo.reason)) {
+                device.reason = deviceInfo.reason
             }
-            if (Array.isArray(data.payload.history)) {
-                device.history = data.payload.history
-            }
+            if (Array.isArray(deviceInfo.history)) {
+                device.history = []
+                for (let entry of deviceInfo.history) {
+                    if (!entry.reason) {
+                        entry.reason = [ { message: "As before - compressed", timestamp: entry.time } ]
+                    }
+                    device.history.push(entry)
+                }
+            } 
         }
         return device
     }
@@ -186,7 +194,7 @@ export class DeviceStorage {
      * @param value value of the node
      * @param reason reason for the last value change
      */
-    public replaceNode(topic: string, value: string, reason:Reason[], history?:Message[]) {
+    public replaceNode(topic: string, value: string, reason:Reason[], history?:History[]) {
         let node = this.addNode(topic)
         node.value = value
         node.reason = reason
@@ -199,14 +207,11 @@ export class DeviceStorage {
      * Replaces many nodes by data read from server
      * @param data data read from server
      */
-    public replaceMany(payload: any) {
-        if (payload && payload.current) {
-            this.replaceNode(payload.current.topic, payload.current.value, payload.current.reason, payload.history);
-        }
-        for (let index in payload) {
-            if (index !== 'current' && index !== 'statistics' && index !== 'history' && index !== 'set') {
-                const child = payload[index]
-                this.replaceMany(child)
+    public replaceMany(payload) {
+        if (payload) {
+            for (let topic in payload) {
+                let info = payload[topic]
+                this.replaceNode(info.topic, info.value, info.reason, info.history);
             }
         }
     }

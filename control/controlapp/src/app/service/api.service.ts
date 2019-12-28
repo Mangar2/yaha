@@ -13,9 +13,24 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { DeviceInfo, PublishResult } from './deviceinfo';
 
 import { Observable } from 'rxjs';
+import { Payload } from '../device/device'
+
+/**
+ * Result structure of a publish command
+ */
+interface PublishResult {    
+    result: string;
+}
+
+/**
+ * Data structure to transport information about devices
+ */
+interface DeviceInfo {
+    topics: string[];
+    payload: Payload;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +47,7 @@ export class ApiService {
     getDevice(topic: string, history: boolean): Observable<HttpResponse<DeviceInfo>> {
         const data = {
             topic: topic,
-            history: history
+            history: history ? "true" : "false"
         }
         return this.http.post<DeviceInfo>("angular/api/sensor.php", data, { observe: 'response' });
     }

@@ -12,10 +12,12 @@ export class ReasonToTextPipe implements PipeTransform {
         let spacer: string = ''
         let index = 1
         const localTime: LocalTimePipe = new LocalTimePipe()
-        for (let entry of reason) {
-            result = result + spacer + index + '. ' + entry.message + ' (' + localTime.transform(entry.timestamp, index === 1) + ')'
-            spacer = ' '
-            index++;
+        if (reason) {
+            for (let entry of reason) {
+                result = result + spacer + index + '. ' + entry.message + ' (' + localTime.transform(entry.timestamp, index === 1) + ')'
+                spacer = ' '
+                index++;
+            }
         }
         return result
     }

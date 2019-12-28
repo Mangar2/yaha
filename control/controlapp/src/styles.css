@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 320px;
+    margin: 32px 0px 0px -8px;
+}
+
+a,
+a:visited,
+a:hover {
+    text-decoration: none;
+}

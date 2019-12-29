@@ -43,11 +43,13 @@ export class ApiService {
      * Gets device infos from the server
      * @param topic topic string to identify the device
      * @param history true, if history data will be added
+     * @param levelAmount amount of data level to retrieve
      */
-    getDevice(topic: string, history: boolean): Observable<HttpResponse<DeviceInfo>> {
+    getDevice(topic: string, history: boolean, levelAmount: number = 1): Observable<HttpResponse<DeviceInfo>> {
         const data = {
-            topic: topic,
-            history: history ? "true" : "false"
+            topic,
+            history: history ? "true" : "false",
+            levelAmount
         }
         return this.http.post<DeviceInfo>("angular/api/sensor.php", data, { observe: 'response' });
     }

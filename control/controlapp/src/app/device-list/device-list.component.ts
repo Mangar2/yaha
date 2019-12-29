@@ -24,18 +24,16 @@ export class DeviceListComponent {
     }
 
     ngOnInit() {
-        const pollForUpdate = timer(5 * 1000, 10 * 1000)
+        const pollForUpdate = timer(0, 10 * 1000)
         this.route.paramMap.subscribe(params => {
             this.topicFilter = params.get('topicFilter');
             if (this.topicFilter === null) {
                 this.topicFilter = ''
             }
             this.topicFilter = this.topicFilter.replace('%2F', '/')
-            this.readAll()
         });
         this.subscription = pollForUpdate.subscribe(() => {
-            console.log('Read to ' + this.topicFilter);
-            this.readAll()
+            this.readTree()
         })
     }
 
@@ -89,6 +87,20 @@ export class DeviceListComponent {
         }
         const result = topicArray.slice(0, level).join('/')
         return result
+    }
+
+    /**
+     * reads a full tree and populates the UI from the result
+     */
+    readTree (): void {
+        this.deviceApi.getDevice('', false, 7).
+        subscribe(resp => {
+            const payload = resp.body.payload
+            this.deviceStorage.replaceMany(payload)
+            for (const device of devices) {
+                this.deviceStorage.replaceDevice(device.topic)
+            }
+        })
     }
 
     /**

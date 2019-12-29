@@ -205,13 +205,15 @@ export class DeviceStorage {
     
     /**
      * Replaces many nodes by data read from server
-     * @param data data read from server
+     * @param payload data read from server
      */
-    public replaceMany(payload) {
+    public replaceMany(payload: Payload) {
         if (payload) {
             for (let topic in payload) {
-                let info = payload[topic]
-                this.replaceNode(info.topic, info.value, info.reason, info.history);
+                if (typeof(topic) === 'string' && topic !== '') {
+                    let info = payload[topic]
+                    this.replaceNode(info.topic, info.value, info.reason, info.history);
+                }
             }
         }
     }

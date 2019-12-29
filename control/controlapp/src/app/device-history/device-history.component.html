@@ -9,7 +9,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let entry of device.history">
+                <tr *ngFor="let entry of device.history | slice:0:100">
                     <td>{{entry.value}}</td>
                     <td>{{entry.reason | reasonToText }}</td>
                 </tr>        

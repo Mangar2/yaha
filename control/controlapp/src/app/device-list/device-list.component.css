@@ -1,21 +1,3 @@
-.sub-container {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-    align-items: flex-start;
-    width: 1200px;
-    min-width: 320px;
-    margin: 32px auto;
-}
-
-.card-container {
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    justify-content: center;
-}
 
 .card {
     display: flex;
@@ -121,10 +103,6 @@ a:hover {
 
 /* Responsive Styles */
 @media only screen and (max-width: 767px) {
-
-    .card-nav {
-        display: none;
-    }
 
     .card-name {
         font-size: 16px;

@@ -21,7 +21,7 @@ if (empty($postdata)) {
             
         }
         if (property_exists($request, "levelAmount")) {
-            $levelAmount = filter_var($request->levelAmount, FILTER_VALIDATE_NUMBER, [
+            $levelAmount = filter_var($request->levelAmount, FILTER_VALIDATE_INT, [
                 'options' => [
                     'default' => 1,
                     'min-range' => 1,

@@ -1,6 +1,7 @@
 
-<div class="detail-container">
+<div class="container">
 
+    <div class = "row">
     <div class="detail-card" *ngIf="device">
 
         <div class = "detail-header">
@@ -16,13 +17,17 @@
                 <span class="detail-text">{{ reason.message }}</span>
             </div>
         </div>
-        <div class="detail-buttons">
-            <a class = "detail-button" (click)="onClick(device, action)" [class.active]="action === device.value" *ngFor="let action of device.actions"  >
-                {{action}}
-            </a>
-        </div>
+        <button type="button" class = "btn btn-block" 
+            [class.btn-secondary]="action !== device.value" 
+            [class.btn-primary]="action === device.value" 
+            (click)="onClick(device, action)"  
+            *ngFor="let action of device.actions"  >
+            {{action}}
+        </button>
     </div>
+</div>
 
-    <app-device-history></app-device-history>
+    <div class = "row"><app-device-history></app-device-history></div>
+    
 
 </div>

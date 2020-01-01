@@ -12,6 +12,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import { ReasonToTextPipe } from './reason-pipe';
 
 export interface Reason {
     timestamp: string;
@@ -285,6 +286,21 @@ export class DeviceStorage {
         for (const property of ['name', 'value', 'reason', 'history', 'actions', 'properties', 'pictures']) {
             if (device[property] !== undefined) {
                 node[property] = device[property]
+            }
+        }
+        // Force a standard for formatting "on" and "off" for better control later
+        if (node.actions !== undefined && node.actions.includes('on')) {
+            const isOn = (node.value === 'on' || node.value === 'true' || Number(node.value) > 0)
+            node.value = isOn ? 'on' : 'off'
+        } 
+        // Put at least time infos to the reason of history entries
+        if (Array.isArray(node.history)) {
+            for (const entry of node.history) {
+                if (entry.reason === undefined) {
+                    const timestamp = (new Date(entry.time)).toLocaleString()
+                    const message = 'skipped'
+                    entry.reason = [{ timestamp, message }]
+                }
             }
         }
     }

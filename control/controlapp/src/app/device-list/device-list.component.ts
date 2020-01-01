@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { devices } from '../devices';
-import { timer, Observable, forkJoin } from 'rxjs';
+import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ApiService } from '../service/api.service';
 
-import { DeviceStorage } from '../device/device';
+import { DeviceStorage, Devices } from '../device/device';
 
 @Component({
     selector: 'app-device-list',
@@ -15,12 +14,12 @@ import { DeviceStorage } from '../device/device';
 })
 export class DeviceListComponent {
     title = 'yaha Smart Home'
-    devices = devices
-    deviceStatus = {}
+    devices = new Devices()
     topicFilter
     subscription: any
         
-    constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService,  private deviceStorage: DeviceStorage) {
+    constructor(private route: ActivatedRoute, private deviceApi: ApiService,  private deviceStorage: DeviceStorage) {
+
     }
 
     ngOnInit() {
@@ -31,6 +30,9 @@ export class DeviceListComponent {
                 this.topicFilter = ''
             }
             this.topicFilter = this.topicFilter.replace('%2F', '/')
+            if (!this.deviceStorage.isEmpty()) {
+                this.updateDevices()
+            }
         });
         this.subscription = pollForUpdate.subscribe(() => {
             this.readTree()
@@ -60,33 +62,22 @@ export class DeviceListComponent {
             subscribe(resp => {
                 const data = resp.body
                 const deviceInfo = data.payload[topic]
-                const device = this.deviceStorage.getDevice(topic)
-                this.deviceStorage.updateDevice(topic, device, deviceInfo)   
+                const device = this.devices.getDevice(topic)
+                this.deviceStorage.updateNodes(device)
+                this.devices.updateDevice(topic, deviceInfo)   
             })
     }
 
     /**
-     * Adds a list of http responses to the device storage
+     * Update the devices by applying a filter
      */
-    addResponsesToDeviceStorage(httpResponses: any[]) {
-        for (let resp of httpResponses) {
-            const data = resp.body
-            this.deviceStorage.replaceMany(data.payload)
+    updateDevices() {
+        const nodes = this.deviceStorage.filterNodes(this.topicFilter, ['control', 'measured'])
+        const devices = new Devices()
+        for (const node of nodes) {
+            devices.replaceDevice(node.topic, node)
         }
-    }
-
-    /**
-     * Get the base topic of a topic (limited to level of subelements)
-     * @param topic topic
-     * @param level amount of subelements
-     */
-    getTopicBase(topic: string, level: number) {
-        const topicArray = topic.split('/')
-        if (level > topicArray.length-1) {
-            level = topicArray.length - 1
-        }
-        const result = topicArray.slice(0, level).join('/')
-        return result
+        this.devices = devices
     }
 
     /**
@@ -96,36 +87,11 @@ export class DeviceListComponent {
         this.deviceApi.getDevice('', false, 7).
         subscribe(resp => {
             const payload = resp.body.payload
-            this.deviceStorage.replaceMany(payload)
+            this.deviceStorage.replaceManyNodes(payload)
             for (const device of devices) {
-                this.deviceStorage.replaceDevice(device.topic)
+                this.deviceStorage.updateNodes(device)
             }
-        })
-    }
-
-    /**
-     * Gets data from a topic and its subtopics
-     */
-    readAll (): void {
-        const topicBases = []
-        const observables = []
-        for (const device of devices) {
-            if (device.topic.startsWith(this.topicFilter)) {
-                observables.push(this.deviceApi.getDevice(device.topic, false))
-                const topicBase = this.getTopicBase(device.topic, 3)
-                if (!topicBases.includes(topicBase)) {
-                    topicBases.push(topicBase)
-                }
-            }
-        }
-        forkJoin(observables).subscribe((responses) => {
-            console.log(responses)
-            this.addResponsesToDeviceStorage(responses)
-            for (const device of devices) {
-                if (device.topic.startsWith(this.topicFilter)) {
-                    this.deviceStorage.replaceDevice(device.topic)
-                }
-            }
+            this.updateDevices()
         })
     }
 

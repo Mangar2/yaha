@@ -1,23 +1,21 @@
 import { pictures } from './pictures/pictures'
 
 const deviceOnOff = {
-    reason: [],
     actions: ['on', 'off']
 }
 
 const light = {
     ...deviceOnOff,
     properties: ['control'],
-    ...pictures.light
+    pictures: pictures.light
 }
 
 const measured =  {
-    reason: [],
     actions: [],
     properties: ['measured']
 }
 
-export const devices = [
+export const devices: any = [
     {
         ...deviceOnOff,
         name: 'Main status',
@@ -25,7 +23,7 @@ export const devices = [
         value: 'on',
         actions: ['on', 'off', 'sleeping'],
         properties: ['favorit', 'control'],
-        ...pictures.house
+        pictures: pictures.house
     },
     {
         ...deviceOnOff,
@@ -33,7 +31,7 @@ export const devices = [
         topic: 'first/study/zwave/switch/master',
         properties: ['favorit', 'control'],
         value: 'on',
-        ...pictures.powerSwitch
+        pictures: pictures.powerSwitch
     },
     { 
         ...deviceOnOff,
@@ -41,63 +39,63 @@ export const devices = [
         topic: 'ground/wardrobe/i2c/switch/backup',
         actions: ['on', 'hibernate', 'off'],
         properties: ['favorit', 'control'],
-        ...pictures.backup
+        pictures: pictures.backup
     },
     { 
         ...deviceOnOff,
         name: 'Charge',
         topic: 'ground/wardrobe/i2c/switch/charge',
         properties: ['control'],        
-        ...pictures.charge
+        pictures: pictures.charge
     },    
     { 
         ...deviceOnOff,
         name: 'Monitor',
         topic: 'ground/wardrobe/i2c/switch/monitor',
         properties: ['favorit', 'control'],
-        ...pictures.monitor
+        pictures: pictures.monitor
     },    
     { 
         ...deviceOnOff,
         name: 'Floor heating',
         topic: 'ground/wardrobe/fs20/switch/floor heating',
         properties: ['control'],
-        ...pictures.floorHeating
+        pictures: pictures.floorHeating
     },    
     { 
         ...deviceOnOff,
         name: 'Network switch',
         topic: 'ground/wardrobe/i2c/switch/network switch',
         properties: ['control'],
-        ...pictures.networkSwitch
+        pictures: pictures.networkSwitch
     },    
     { 
         ...deviceOnOff,
         name: 'Security camera',
         topic: 'ground/livingroom/zwave/switch/camera',
         properties: ['control'],
-        ...pictures.securityCamera
+        pictures: pictures.securityCamera
     },    
     { 
         ...deviceOnOff,
         name: 'Electric iron',
         topic: 'first/dressingroom/zwave/switch/electric iron',
         properties: ['control'],
-        ...pictures.electricIron
+        pictures: pictures.electricIron
     },
     {
         ...deviceOnOff,
         name: "Battery charging",
         topic: "ground/livingroom/zwave/switch/charge",
         properties: ['control'],
-        ...pictures.charge
+        pictures: pictures.charge
     },
     {
         ...deviceOnOff,
         name: "Ceiling floodlight",
         topic: "ground/livingroom/zwave/switch/floodlight",
         properties: ['control'],
-        ...pictures.light
+        pictures: pictures.light
     },
     {
         ...deviceOnOff,
@@ -105,7 +103,7 @@ export const devices = [
         topic: "ground/livingroom/zwave/shutter/southeast",
         actions: ['up', 'down', 'stop'],
         properties: ['control'],
-        ...pictures.roller
+        pictures: pictures.roller
     },
     {
         ...deviceOnOff,
@@ -113,140 +111,140 @@ export const devices = [
         topic: "ground/livingroom/zwave/shutter/southwest",
         actions: ['on', 'off', 'stop'],
         properties: ['control'],
-        ...pictures.roller
+        pictures: pictures.roller
     },
     {
         ...deviceOnOff,
         name: "Master switch multimedia",
         topic: "ground/livingroom/zwave/switch/tvmaster",
         properties: ['control'],
-        ...pictures.multimedia
+        pictures: pictures.multimedia
     },
     {
         ...deviceOnOff,
         name: "Multimedia amplifier",
         topic: "ground/livingroom/fs20/switch/amplifier",
         properties: ['control'],
-        ...pictures.amplifier
+        pictures: pictures.amplifier
     },
     {
         ...deviceOnOff,
         name: "Apple TV",
         topic: "ground/livingroom/fs20/switch/appletv",
         properties: ['control'],
-        ...pictures.computer
+        pictures: pictures.computer
     },
     {
         ...deviceOnOff,
         name: "Dishwasher",
         topic: "ground/kitchen/zwave/switch/dishwasher",
         properties: ['control'],
-        ...pictures.dishwasher
+        pictures: pictures.dishwasher
     },
     {
         ...deviceOnOff,
         name: "Refrigerator",
         topic: "ground/kitchen/zwave/switch/fridge",
         properties: ['control', 'protect'],
-        ...pictures.refrigerator
+        pictures: pictures.refrigerator
     },
     {
         ...deviceOnOff,
         name: "Ventilation system",
         topic: "ground/wardrobe/zwave/switch/ventilation",
         properties: ['control'],
-        ...pictures.ventilationSystem
+        pictures: pictures.ventilationSystem
     },
     {
         ...deviceOnOff,
         name: "Smarthome Power",
         topic: "ground/wardrobe/zwave/switch/smarthome",
         properties: ['control', 'protect'],
-        ...pictures.powerSwitch
+        pictures: pictures.powerSwitch
     },
     {
         ...deviceOnOff,
         name: "Smarthome server",
         topic: "ground/wardrobe/i2c/switch/server",
-        actions: ['shutdown'],
+        actions: ['shutdown', 'on', 'off'],
         properties: ['control', 'protect'],
-        ...pictures.smarthomeServer
+        pictures: pictures.smarthomeServer
     },
     {
         ...deviceOnOff,
         name: "Internet router (fritz box)",
         topic: "ground/wardrobe/i2c/switch/internet",
         properties: ['control', 'protect'],
-        ...pictures.internet
+        pictures: pictures.internet
     },
     {
         ...deviceOnOff,
         name: "Socket at parkingplace",
         topic: "outdoor/garden/main/switch/socketparkingplace",
         properties: ['control', 'notify'],
-        ...pictures.socket
+        pictures: pictures.socket
     },   
     {
         ...deviceOnOff,
         name: "Socket at stonefield",
         topic: "outdoor/garden/main/switch/socketstonefield",
         properties: ['control'],
-        ...pictures.socket
+        pictures: pictures.socket
     },   
     {
         ...deviceOnOff,
         name: "Pump in cistern",
         topic: "outdoor/garden/main/switch/pump",
         properties: ['control', 'notify'],
-        ...pictures.water
+        pictures: pictures.water
     },            
     {
         ...deviceOnOff,
         name: "Light at stairs",
         topic: "outdoor/garden/main/switch/lightstairs",
         properties: ['control'],
-        ...pictures.lightStairs
+        pictures: pictures.lightStairs
     },           
     {
         ...deviceOnOff,
         name: "Lights on stonefield",
         topic: "outdoor/garden/fs20/switch/light stonefield",
         properties: ['control'],
-        ...pictures.lightStonefield
+        pictures: pictures.lightStonefield
     },
     {
         ...deviceOnOff,
         name: "Lights on pathway",
         topic: "outdoor/garden/fs20/switch/light pathway",
-        ...pictures.lightPathway
+        pictures: pictures.lightPathway
     },
     {
         ...deviceOnOff,
         name: "Laser printer",
         topic: "first/study/zwave/switch/laserprinter",
         properties: ['control'],
-        ...pictures.printer
+        pictures: pictures.printer
     },
     {
         ...deviceOnOff,
         name: "Regina's computer",
         topic: "first/study/zwave/switch/pcregina",
         properties: ['control'],
-        ...pictures.computerTower
+        pictures: pictures.computerTower
     },
     {
         ...deviceOnOff,
         name: "Volker's computer",
         topic: "first/study/zwave/switch/pcvolker",
         properties: ['control'],
-        ...pictures.computerTower
+        pictures: pictures.computerTower
     },
     {
         ...deviceOnOff,
         name: "Camera boilerroom",
         topic: "cellar/boilerroom/switches/switch/camera",
         properties: ['control'],
-        ...pictures.securityCamera
+        pictures: pictures.securityCamera
     },
     {
         ...light,
@@ -300,43 +298,49 @@ export const devices = [
     },
     {
         ...measured,
+        name: "temperature [2]",
+        topic: "%/%/%/temperature and humidity sensor/temperature in celsius",
+        pictures: pictures.temperature
+    },
+    {
+        ...measured,
         name: "outside temperature",
         topic: "outdoor/garden/main/weather/temperature",
         properties: ['measured', 'favorit'],
-        ...pictures.temerature
+        pictures: pictures.temperature
     },
     {
         ...measured,
         name: "outside pressure",
         topic: "outdoor/garden/main/weather/pressure",
-        ...pictures.pressure
+        pictures: pictures.pressure
     },
     {
         ...measured,
         name: "outside humidity",
         topic: "outdoor/garden/main/weather/humidity",
-        ...pictures.humidity
+        pictures: pictures.humidity
     },
     {
         ...measured,
         name: "power consumption",
         topic: "solar/consumption",
         properties: ['measured', 'favorit'],
-        ...pictures.consumption
+        pictures: pictures.consumption
     },
     {
         ...measured,
         name: "solar power feed in",
         topic: "solar/feedin",
         properties: ['measured', 'favorit'],
-        ...pictures.feedin
+        pictures: pictures.feedin
     },
     {
         ...measured,
         name: "solar power yield",
         topic: "solar/solar yield",
         properties: ['measured', 'favorit'],
-        ...pictures.solaryield
+        pictures: pictures.solaryield
     }
     /*,    
     { 

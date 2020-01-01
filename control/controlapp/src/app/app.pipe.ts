@@ -8,8 +8,10 @@ import { Device } from './device/device'
 export class LocationPipe implements PipeTransform {
 
   transform(devices: Device[], filter: string): any {
+        console.log(devices)
         return devices.filter(device => {
-            return device.topic.startsWith(filter)
+            const result = device.topic.startsWith(filter)
+            return result
         });
   }
 

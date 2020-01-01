@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { timer } from 'rxjs';
 
-import { DeviceStorage } from '../device/device';
+import { DeviceStorage, Devices, DeviceInfo } from '../device/device';
 
 import { ApiService } from '../service/api.service';
-import { History } from '../device/device';
+import { devices } from '../devices';
 
 @Component({
     selector: 'app-device-details',
@@ -15,26 +14,38 @@ import { History } from '../device/device';
 })
 
 export class DeviceDetailsComponent implements OnInit {
-    device: any
+    deviceTopic: string = ''
     subscription: any
 
-    constructor(private route: ActivatedRoute, private http: HttpClient, private deviceApi: ApiService, private deviceStorage: DeviceStorage) { 
+    constructor(private route: ActivatedRoute, private deviceApi: ApiService, private deviceStorage: DeviceStorage, private device: DeviceInfo) { 
+    }
+
+    /**
+     * Actualizes the device information 
+     * @param payload data received from api
+     */
+    updateDevices() {
+        const node = this.deviceStorage.getNodes(this.deviceTopic)
+        if (node[0] !== undefined) {
+            const devices = new Devices()
+            devices.replaceDevice(this.deviceTopic, node[0])
+            this.device.update(devices.getDeviceByIndex(0))
+        }
     }
 
     /**
      * Read data from the server based on a topic
-     * @param topic topic to fetch data for
      * @param history true, to add the history
      */
-    updateDeviceFromApi(topic: string, history: boolean) {
-        this.deviceApi.getDevice(topic, history).
+    updateDeviceFromApi(history: boolean) {
+        this.deviceApi.getDevice(this.deviceTopic, history).
             subscribe(resp => {
-                const data = resp.body
-                if (data && data.payload) {
-                    const deviceInfo = data.payload[topic]
-                    const device = this.deviceStorage.getDevice(topic)
-                    this.deviceStorage.updateDevice(topic, device, deviceInfo)   
+                const payload = resp.body.payload
+                this.deviceStorage.replaceManyNodes(payload)
+                for (const device of devices) {
+                    this.deviceStorage.updateNodes(device)
                 }
+                this.updateDevices()
             })
     }
 
@@ -46,17 +57,15 @@ export class DeviceDetailsComponent implements OnInit {
 
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
-            const deviceTopic = params.get('deviceTopic')
-            this.device = this.deviceStorage.getDevice(deviceTopic)
+            this.deviceTopic = params.get('deviceTopic')
+            this.updateDevices()
         });
         
-        if (this.device.topic) {
-            const pollForUpdate = timer(0, 2 * 1000)
-            this.subscription = pollForUpdate.subscribe(() => {
-                console.log("detail update");
-                this.updateDeviceFromApi(this.device.topic, true)
-            })
-        }
+        const pollForUpdate = timer(0, 2 * 1000)
+        this.subscription = pollForUpdate.subscribe(() => {
+            console.log("detail update");
+            this.updateDeviceFromApi(true)
+        })
         
     }
 

@@ -1,33 +1,32 @@
-
 <div class="container">
 
-    <div class = "row">
-    <div class="detail-card" *ngIf="device">
+    <div class="row col-9" *ngIf="device">
+        <div class="detail-card">
 
-        <div class = "detail-header">
-            <img class="detail-img" width="64" *ngIf="device.value" alt="bild" [src]="device[device.value] ? device[device.value] : device['on']" />
-            <span class="detail-headline">{{ device.name }}</span>
-        </div>
-        <div class = "detail-data" *ngIf="device.reason">
-            <div class = "detail-data-row">
-                <span class="detail-label">status</span><span class="detail-text">{{ device.value }}</span>
-            </div>    
-            <div class = "detail-data-row" *ngFor="let reason of device.reason; index as i">
-                <span class="detail-label">{{ reason.timestamp | localTime:i===0 }}</span>
-                <span class="detail-text">{{ reason.message }}</span>
+            <div class="detail-header">
+                <img class="detail-img" width="64" *ngIf="device && device.value && device.pictures" alt="bild"
+                    [src]="device.pictures[device.value] ? device.pictures[device.value] : device.pictures['on']" />
+                <span class="detail-headline">{{ device.name }}</span>
             </div>
+            <div class="detail-data" *ngIf="device.reason">
+                <div class="detail-data-row">
+                    <span class="detail-label">status</span><span class="detail-text">{{ device.value }}</span>
+                </div>
+                <div class="detail-data-row" *ngFor="let reason of device.reason; index as i">
+                    <span class="detail-label">{{ reason.timestamp | localTime:i===0 }}</span>
+                    <span class="detail-text">{{ reason.message }}</span>
+                </div>
+            </div>
+            <button type="button" class="btn btn-block" [class.btn-secondary]="action !== device.value"
+                [class.btn-primary]="action === device.value" (click)="onClick(device, action)"
+                *ngFor="let action of device.actions">
+                {{action}}
+            </button>
         </div>
-        <button type="button" class = "btn btn-block" 
-            [class.btn-secondary]="action !== device.value" 
-            [class.btn-primary]="action === device.value" 
-            (click)="onClick(device, action)"  
-            *ngFor="let action of device.actions"  >
-            {{action}}
-        </button>
     </div>
-</div>
+    <div class="row col-9">
+        <app-device-history></app-device-history>
+    </div>
 
-    <div class = "row"><app-device-history></app-device-history></div>
-    
 
 </div>

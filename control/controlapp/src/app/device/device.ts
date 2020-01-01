@@ -231,7 +231,12 @@ export class DeviceStorage {
      * @returns nodes matching the topic
      */
     private filterNodesRec(topic: string, node: StorageNode, properties: string[]): StorageNode[] {
-        const intersect = node.properties !== undefined && properties.filter(value => node.properties.includes(value))
+        
+        let intersect = properties === undefined || properties.length === 0 
+        if (node.properties !== undefined && properties !== undefined) {
+            const intersectArray = properties.filter(value => node.properties.includes(value))
+            intersect = intersectArray.length > 0
+        }
         let result = intersect ? [node] : []
         
         for (const childChunk in node.childs) {

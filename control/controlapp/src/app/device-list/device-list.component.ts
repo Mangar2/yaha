@@ -69,10 +69,27 @@ export class DeviceListComponent {
     }
 
     /**
+     * Selects the properties to filter shown devices
+     */
+    selectFilterProperties(): string[] {
+        let result: string[]
+        const topicFilterLength = this.topicFilter === '' ? 0 : this.topicFilter.split('/').length
+        switch (topicFilterLength) {
+            case 0: result = ['favorit']; break;
+            case 1: result = ['favorit', 'control', 'security', 'level1']; break;
+            case 2:
+            case 3: result = ['favorit', 'level1', 'level2', 'control', 'security', 'measured']; break;
+            default: result = []
+        }
+        return result
+    }
+
+    /**
      * Update the devices by applying a filter
      */
     updateDevices() {
-        const nodes = this.deviceStorage.filterNodes(this.topicFilter, ['control', 'measured'])
+        const filterProperties = this.selectFilterProperties()
+        const nodes = this.deviceStorage.filterNodes(this.topicFilter, filterProperties)
         const devices = new Devices()
         for (const node of nodes) {
             devices.replaceDevice(node.topic, node)

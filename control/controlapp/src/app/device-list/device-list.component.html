@@ -1,4 +1,7 @@
+<app-breadcrumb></app-breadcrumb>
+
 <div class="container" role="main">
+
     <div class = "row mt-md-3">
         <div class="col d-none d-md-block">
             <app-location-menu></app-location-menu>
@@ -20,7 +23,7 @@
                             <span class="card-status">{{ device.value }}</span>
                         </div>
                     </a>
-                    <a class="card-details" [routerLink]="['/devicedetails', device.topic]">
+                    <a class="card-details" [routerLink]="['/devicedetails', device.topic.split('/').join('|')]">
                         >
                     </a>
                 </div>

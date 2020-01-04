@@ -8,7 +8,7 @@ import { DeviceListComponent } from './device-list/device-list.component';
 
 const routes: Routes = [
     { path: '', component: RootMenuComponent },
-    { path: 'devicedetails/:deviceTopic', component: DeviceDetailsComponent },
+    { path: 'devicedetails/:topicFilter', component: DeviceDetailsComponent },
     { path: 'devicelist', component: DeviceListComponent },
     { path: 'devicelist/:topicFilter', component: DeviceListComponent }
 ];

@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------------------------------
  */
 
+import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
@@ -29,8 +30,12 @@ import { devices } from '../devices';
 export class DeviceDetailsComponent implements OnInit {
     deviceTopic: string = ''
     subscription: any
+    supportsUpdate: boolean
+    detailForm = new FormGroup({
+        value: new FormControl('')
+    })
 
-    constructor(private route: ActivatedRoute, private deviceApi: ApiService, private deviceStorage: DeviceStorage, private device: DeviceInfo) { 
+    constructor(private route: ActivatedRoute, private deviceApi: ApiService, private deviceStorage: DeviceStorage, public device: DeviceInfo) { 
     }
 
     /**
@@ -42,7 +47,9 @@ export class DeviceDetailsComponent implements OnInit {
         if (node[0] !== undefined) {
             const devices = new Devices()
             devices.replaceDevice(this.deviceTopic, node[0])
-            this.device.update(devices.getDeviceByIndex(0))
+            const newDevice = devices.getDeviceByIndex(0)
+            this.device.update(newDevice)
+            this.supportsUpdate = newDevice.actions === undefined && !newDevice.properties.includes('measured')
         }
     }
 
@@ -62,15 +69,35 @@ export class DeviceDetailsComponent implements OnInit {
             })
     }
 
-    onClick (device, value): void {
-        this.deviceApi.publish(device.topic, value).subscribe(resp => {
+    /**
+     * Publishes a new value to a device on button click
+     * @param value new value to publish
+     */
+    onClick (value): void {
+        this.deviceApi.publish(this.device.topic, value).subscribe(resp => {
             console.log(resp)
         })
     }
 
+    /**
+     * Called when updating a manually changed value
+     */
+    onUpdate(): void {
+        console.log("click")
+        const valueControl = this.detailForm.get('value')
+        if (valueControl.touched) {
+            this.deviceApi.publish(this.device.topic, valueControl.value).subscribe(resp => {
+                console.log(resp)
+            })
+        }
+    }
+
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
-            this.deviceTopic = params.get('deviceTopic')
+            this.deviceTopic = params.get('topicFilter')
+            if (this.deviceTopic) {
+                this.deviceTopic = this.deviceTopic.split('|').join('/')
+            }
             this.updateDevices()
         });
         

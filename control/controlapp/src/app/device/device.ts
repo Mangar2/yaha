@@ -84,9 +84,10 @@ export class DeviceInfo implements Device {
     update(node: Device = undefined) {
         if (node !== undefined)  {
             const topicChunks = node.topic !== undefined ? node.topic.split('/') : []
-            for (const property of ['topic', 'name', 'value', 'reason', 'history', 'actions', 'properties', 'pictures']) {
+            for (const property of ['time', 'name', 'value', 'reason', 'history', 'actions', 'properties', 'pictures']) {
                 this[property] = node[property]
             }
+            this.topic = topicChunks.join('|')
             if (this.actions !== undefined && this.actions.includes('on')) {
                 const isOn = (this.value === 'on' || this.value === 'true' || Number(this.value) > 0)
                 this.value = isOn ? 'on' : 'off'
@@ -96,11 +97,13 @@ export class DeviceInfo implements Device {
                     this.name = this.name.replace('[' + i + ']', topicChunks[i - 1])
                 }
             } else {
-                const topicArray = this.topic.split('/')
-                this.name = topicArray.pop()
+                this.name = topicChunks.pop()
             }
             if (!Array.isArray(this.reason)) {
                 this.reason = []
+            }
+            if (!Array.isArray(this.properties)) {
+                this.properties = []
             }
         }
     }

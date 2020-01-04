@@ -1,3 +1,4 @@
+<app-breadcrumb></app-breadcrumb>
 <div class="container">
 
     <div class="row justify-content-md-center" *ngIf="device">
@@ -14,11 +15,11 @@
                     <span class="detail-headline">{{ device.name }}</span>
                 </div>
             </div>
-            <form>
+            <form [formGroup]="detailForm">
                 <div class="form-group row">
                     <label for="status" class="col-sm-2 col-form-label">status</label>
                     <div class="col-sm-10 col-md-6">
-                        <input type="text" readonly class="form-control" id="status" [value]="device.value">
+                        <input type="text" class="form-control" id="status" [value]="device.value" formControlName="value">
                     </div>
                 </div>
                 <div class="form-group row" *ngFor="let reason of device.reason; index as i">
@@ -28,9 +29,13 @@
                     </div>
                 </div>
             </form>
+            <button type="button" class="btn btn-primary btn-block col-sm-12 col-md-8"
+                (click)="onUpdate()" *ngIf="supportsUpdate">
+                update
+            </button>
             <button type="button" class="btn btn-block col-sm-12 col-md-8"
                 [class.btn-secondary]="action !== device.value" [class.btn-primary]="action === device.value"
-                (click)="onClick(device, action)" *ngFor="let action of device.actions">
+                (click)="onClick(action)" *ngFor="let action of device.actions">
                 {{action}}
             </button>
         </div>

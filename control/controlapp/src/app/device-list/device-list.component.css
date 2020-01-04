@@ -1,24 +1,16 @@
 
-.card {
+.card-adapt {
     display: flex;
     flex-direction: row;
-    flex: 1 1 0px;
-    justify-content: space-between;
-    position: relative;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    background-color: #fafafa;
-    height: 80px;
-    min-width: 350px;
+    min-width: 380px;
     max-width: 500px;
     margin: 0 8px 8px;
-    transition: all 0.2s ease-in-out;
-    line-height: 24px;
 }
 
 .card-clickable {
     display: flex;
     flex-direction: row;
+    cursor: pointer;
 }
 
 .card-img {
@@ -32,7 +24,7 @@
     font-size: 18px;
     font-weight: 600;
     color: #555;
-    line-height: 2.0;
+    line-height: 2.5;
 }
 
 .card-status {
@@ -63,25 +55,9 @@
     cursor: pointer;
 }
 
-.card-container .card:not(.highlight-card):hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 17px rgba(black, 0.35);
+.card-clickable:hover {
+    background-color: #f6f7f8;
 }
-
-.card-container .card:not(.highlight-card):hover .material-icons path {
-    fill: rgb(105, 103, 103);
-}
-
-.card.highlight-card {
-    background-color: #1976d2;
-    color: white;
-    font-weight: 600;
-    border: none;
-    width: auto;
-    min-width: 30%;
-    position: relative;
-}
-
 
 a,
 a:hover {

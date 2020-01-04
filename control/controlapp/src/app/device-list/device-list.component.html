@@ -1,5 +1,5 @@
 <div class="container" role="main">
-    <div class = "row">
+    <div class = "row mt-md-3">
         <div class="col d-none d-md-block">
             <app-location-menu></app-location-menu>
         </div>
@@ -7,8 +7,8 @@
         <!-- Cards -->
         <div class="col-md-8 col-lg-9">
             <div class = "row">
-                <div class="card" *ngFor="let device of devices.devices">
-                    <a class="card-clickable" (click)="onClick(device)">
+                <div class="card justify-content-between card-adapt" *ngFor="let device of devices.devices">
+                    <a class="card-clickable flex-fill" (click)="onClick(device)">
                         <img class="card-img" width="64" 
                             *ngIf="device !== undefined && device.value !== undefined && device.pictures !== undefined && device.pictures['on']" 
                             alt="bild" 

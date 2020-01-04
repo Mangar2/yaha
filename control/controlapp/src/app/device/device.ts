@@ -94,7 +94,12 @@ export class DeviceInfo implements Device {
                 this.value = isOn ? 'on' : 'off'
             } 
             if (this.name !== undefined) {
-                this.name = this.name.replace('[2]', topicChunks[1])
+                for (let i = 1; i <= 5; i++) {
+                    this.name = this.name.replace('[' + i + ']', topicChunks[i - 1])
+                }
+            } else {
+                const topicArray = this.topic.split('/')
+                this.name = topicArray.pop()
             }
         }
     }
@@ -215,7 +220,6 @@ export class DeviceStorage {
      * @returns nodes matching the topic or undefined if not found
      */
     public getNodes(topic: string): StorageNode[] {
-
         const topicChunks = topic.split('/')
         if (topicChunks[0] === '') {
             topicChunks.shift()
@@ -225,19 +229,51 @@ export class DeviceStorage {
     }
 
     /**
+     * Gets a list of topic chunks of the childs
+     * @param topic topic to select the child
+     * @returns a list of topic chunks of the childs
+     */
+    getTopicMenu(topic: string): string[]
+    {
+        const nodes = this.getNodes(topic)
+        const childs = Array.isArray(nodes) && nodes.length > 0 ? nodes[0].childs : []
+        const result = []
+        for (const child in childs) {
+            if (child !== 'set' && !child.startsWith('unknown')) {
+                result.push({ name: child })
+            }
+        }
+
+        return result
+    }
+
+    /**
      * Searches recursively in the tree for nodes with the right properties
+     * @param topic current topic
      * @param node node to start with
      * @param properties list of properties to select nodes (OR syntax). If empty, all nodes are selected
+     * @param isRoot true, if the current node is the initial node of the search
      * @returns nodes matching the topic
      */
-    private filterNodesRec(topic: string, node: StorageNode, properties: string[]): StorageNode[] {
+    private filterNodesRec(topic: string, node: StorageNode, properties: string[], isRoot: boolean = false): StorageNode[] {
         
         let intersect = properties === undefined || properties.length === 0 
         if (node.properties !== undefined && properties !== undefined) {
             const intersectArray = properties.filter(value => node.properties.includes(value))
             intersect = intersectArray.length > 0
         }
-        let result = intersect ? [node] : []
+        const lastChunk = topic.split('/').pop()
+        // 
+        // 'set' commands are not relevant, they are included in status reports
+        const isSetTopic = lastChunk === 'set'
+        const propertyIncludesSet = Array.isArray(properties) && properties.includes('set')
+        const excludeSetTopic = (isSetTopic && !propertyIncludesSet)
+        const hasValue = node.value !== undefined
+        // all root nodes must be included
+        const includeNode = (isRoot || (intersect && !excludeSetTopic)) && hasValue
+
+        node.topic = topic
+        let result = includeNode ? [node] : []
         
         for (const childChunk in node.childs) {
             const childNode = node.childs[childChunk]
@@ -258,7 +294,7 @@ export class DeviceStorage {
         const startNode = this.getNodes(baseTopic)[0]
         let result = []
         if (startNode !== undefined) {
-            result = this.filterNodesRec(baseTopic, startNode, properties)
+            result = this.filterNodesRec(baseTopic, startNode, properties, true)
         }
         return result
     }

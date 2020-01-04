@@ -15,7 +15,7 @@ import { DeviceStorage, Devices } from '../device/device';
 export class DeviceListComponent {
     title = 'yaha Smart Home'
     devices = new Devices()
-    topicFilter
+    topicFilter: string
     subscription: any
         
     constructor(private route: ActivatedRoute, private deviceApi: ApiService,  private deviceStorage: DeviceStorage) {
@@ -29,7 +29,7 @@ export class DeviceListComponent {
             if (this.topicFilter === null) {
                 this.topicFilter = ''
             }
-            this.topicFilter = this.topicFilter.replace('%2F', '/')
+            this.topicFilter = this.topicFilter.split('|').join('/')
             if (!this.deviceStorage.isEmpty()) {
                 this.updateDevices()
             }
@@ -41,7 +41,7 @@ export class DeviceListComponent {
 
     onClick (device): void {
         const value = device.value === 'on' ? 'off' : 'on'
-        if (device.actions.includes(value)) {
+        if (device.actions !== undefined && device.actions.includes(value)) {
             this.deviceApi.publish(device.topic, value).subscribe(resp => {
                 const pollForUpdate = timer(500, 500).pipe(take(4))
                 this.subscription = pollForUpdate.subscribe(() => {
@@ -73,13 +73,14 @@ export class DeviceListComponent {
      */
     selectFilterProperties(): string[] {
         let result: string[]
-        const topicFilterLength = this.topicFilter === '' ? 0 : this.topicFilter.split('/').length
+        const topicFilter = this.topicFilter.split('|').join('/')
+        const topicFilterLength = topicFilter === '' ? 0 : topicFilter.split('/').length
         switch (topicFilterLength) {
             case 0: result = ['favorit']; break;
             case 1: result = ['favorit', 'control', 'security', 'level1']; break;
             case 2:
             case 3: result = ['favorit', 'level1', 'level2', 'control', 'security', 'measured']; break;
-            default: result = []
+            default: result = undefined
         }
         return result
     }

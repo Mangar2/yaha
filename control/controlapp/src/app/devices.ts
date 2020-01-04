@@ -11,7 +11,6 @@ const light = {
 }
 
 const measured =  {
-    actions: [],
     properties: ['measured']
 }
 
@@ -27,10 +26,9 @@ export const devices: any = [
     },
     {
         ...deviceOnOff,
-        name: 'Computer main power',
+        name: 'Computer Volker power',
         topic: 'first/study/zwave/switch/master',
         properties: ['favorit', 'control'],
-        value: 'on',
         pictures: pictures.powerSwitch
     },
     { 
@@ -91,11 +89,9 @@ export const devices: any = [
         pictures: pictures.charge
     },
     {
-        ...deviceOnOff,
+        ...light,
         name: "Ceiling floodlight",
         topic: "ground/livingroom/zwave/switch/floodlight",
-        properties: ['control'],
-        pictures: pictures.light
     },
     {
         ...deviceOnOff,
@@ -140,6 +136,12 @@ export const devices: any = [
         topic: "ground/kitchen/zwave/switch/dishwasher",
         properties: ['control'],
         pictures: pictures.dishwasher
+    },
+    {
+        ...deviceOnOff,
+        topic: "cellar/boilerroom/zwave/switch/washing machine",
+        properties: ['control'],
+        pictures: pictures.washingMachine
     },
     {
         ...deviceOnOff,
@@ -248,59 +250,51 @@ export const devices: any = [
     },
     {
         ...light,
-        name: "light study",
-        topic: "first/study/main/light/light on time",
+        name: "light [2]",
+        topic: "%/%/main/light/light on time",
     },
     {
         ...light,
-        name: "light dressing room",
-        topic: "first/dressingroom/main/light/light on time",
-    },
-    {
-        ...light,
-        name: "light bathroom",
-        topic: "first/bathroom/main/light/light on time",
-    },
-    {
-        ...light,
-        name: "light hallway",
-        topic: "first/hallway/main/light/light on time",
-    },
-    {
-        ...light,
-        name: "light hallway",
-        topic: "cellar/hallway/main/light/light on time",
-    },
-    {
-        ...light,
-        name: "light storeroom",
-        topic: "cellar/storeroom/main/light/light on time",
-    },
-    {
-        ...light,
-        name: "light boilerroom",
-        topic: "cellar/boilerroom/main/light/light on time",
-    },
-    {
-        ...light,
-        name: "light hobbycellar west",
-        topic: "cellar/hobbycellar/west/light/light on time",
-    },
-    {
-        ...light,
-        name: "light hobbycellar east",
-        topic: "cellar/hobbycellar/east/light/light on time",
-    },
-    {
-        ...light,
-        name: "light hobbycellar north",
-        topic: "cellar/hobbycellar/north/light/light on time",
+        name: "light [2] [3]",
+        topic: "cellar/%/%/light/light on time",
     },
     {
         ...measured,
         name: "temperature [2]",
         topic: "%/%/%/temperature and humidity sensor/temperature in celsius",
         pictures: pictures.temperature
+    },
+    {
+        ...measured,
+        name: "temperature",
+        topic: "%/%/%/%/temperature",
+        pictures: pictures.temperature
+    },
+    {
+        ...measured,
+        name: "internal temperature",
+        topic: "%/%/%/%/internal temperature in celsius",
+        pictures: pictures.temperature
+    },
+    {
+        topic: "ground/hallway/center/temperature and humidity sensor/temperature in celsius",
+        properties: ['favorit', 'measured'],
+    },
+    {
+        ...measured,
+        name: "humidity [2]",
+        topic: "%/%/%/temperature and humidity sensor/humidity in percent",
+        pictures: pictures.humidity
+    },
+    {
+        ...measured,
+        name: "humidity",
+        topic: "%/%/%/%/humidity",
+        pictures: pictures.humidity
+    },
+    {
+        topic: "ground/hallway/center/temperature and humidity sensor/humidity in percent",
+        properties: ['favorit', 'measured'],
     },
     {
         ...measured,
@@ -330,9 +324,15 @@ export const devices: any = [
     },
     {
         ...measured,
-        name: "solar power feed in",
+        name: "power feed in",
         topic: "solar/feedin",
         properties: ['measured', 'favorit'],
+        pictures: pictures.feedin
+    },
+    {
+        ...measured,
+        name: "average power feed in",
+        topic: "solar/average feedin",
         pictures: pictures.feedin
     },
     {
@@ -341,7 +341,13 @@ export const devices: any = [
         topic: "solar/solar yield",
         properties: ['measured', 'favorit'],
         pictures: pictures.solaryield
-    }
+    },
+    {
+        name: "window [2] [3]",
+        topic: "%/%/%/window/detection state",
+        properties: ['security'],
+        pictures: pictures.window
+    },
     /*,    
     { 
         ...deviceOnOff,

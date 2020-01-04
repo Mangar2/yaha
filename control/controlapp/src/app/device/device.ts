@@ -85,9 +85,7 @@ export class DeviceInfo implements Device {
         if (node !== undefined)  {
             const topicChunks = node.topic !== undefined ? node.topic.split('/') : []
             for (const property of ['topic', 'name', 'value', 'reason', 'history', 'actions', 'properties', 'pictures']) {
-                if (node[property] !== undefined) {
-                    this[property] = node[property]
-                }
+                this[property] = node[property]
             }
             if (this.actions !== undefined && this.actions.includes('on')) {
                 const isOn = (this.value === 'on' || this.value === 'true' || Number(this.value) > 0)
@@ -100,6 +98,9 @@ export class DeviceInfo implements Device {
             } else {
                 const topicArray = this.topic.split('/')
                 this.name = topicArray.pop()
+            }
+            if (!Array.isArray(this.reason)) {
+                this.reason = []
             }
         }
     }
@@ -338,8 +339,8 @@ export class DeviceStorage {
         if (Array.isArray(node.history)) {
             for (const entry of node.history) {
                 if (entry.reason === undefined) {
-                    const timestamp = (new Date(entry.time)).toLocaleString()
-                    const message = 'skipped'
+                    const timestamp = (new Date(entry.time)).toISOString()
+                    const message = 'updated'
                     entry.reason = [{ timestamp, message }]
                 }
             }

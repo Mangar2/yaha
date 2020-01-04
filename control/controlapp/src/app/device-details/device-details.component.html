@@ -1,32 +1,40 @@
 <div class="container">
 
-    <div class="row col-9" *ngIf="device">
-        <div class="detail-card">
+    <div class="row justify-content-md-center" *ngIf="device">
+        <div class="container">
 
-            <div class="detail-header">
-                <img class="detail-img" width="64" *ngIf="device && device.value && device.pictures" alt="bild"
-                    [src]="device.pictures[device.value] ? device.pictures[device.value] : device.pictures['on']" />
-                <span class="detail-headline">{{ device.name }}</span>
-            </div>
-            <div class="detail-data" *ngIf="device.reason">
-                <div class="detail-data-row">
-                    <span class="detail-label">status</span><span class="detail-text">{{ device.value }}</span>
+            <div class="row mt-md-3 mb-3">
+                <div class="col-sm-2 align-items-stretch">
+                    <img class="detail-img"
+                        *ngIf="device && device.value !== undefined && device.pictures !== undefined && device.pictures['on']"
+                        alt="bild"
+                        [src]="device.pictures[device.value] ? device.pictures[device.value] : device.pictures['on']" />
                 </div>
-                <div class="detail-data-row" *ngFor="let reason of device.reason; index as i">
-                    <span class="detail-label">{{ reason.timestamp | localTime:i===0 }}</span>
-                    <span class="detail-text">{{ reason.message }}</span>
+                <div class="col-sm-10 align-items-stretch">
+                    <span class="detail-headline">{{ device.name }}</span>
                 </div>
             </div>
-            <button type="button" class="btn btn-block" [class.btn-secondary]="action !== device.value"
-                [class.btn-primary]="action === device.value" (click)="onClick(device, action)"
-                *ngFor="let action of device.actions">
+            <form>
+                <div class="form-group row">
+                    <label for="status" class="col-sm-2 col-form-label">status</label>
+                    <div class="col-sm-10 col-md-6">
+                        <input type="text" readonly class="form-control" id="status" [value]="device.value">
+                    </div>
+                </div>
+                <div class="form-group row" *ngFor="let reason of device.reason; index as i">
+                    <label [for]="i" class="col-sm-2 col-form-label">{{ reason.timestamp | localTime:i===0 }}</label>
+                    <div class="col-sm-10 col-md-6">
+                        <input type="text" readonly class="form-control" [id]="i" [value]="reason.message">
+                    </div>
+                </div>
+            </form>
+            <button type="button" class="btn btn-block col-sm-12 col-md-8"
+                [class.btn-secondary]="action !== device.value" [class.btn-primary]="action === device.value"
+                (click)="onClick(device, action)" *ngFor="let action of device.actions">
                 {{action}}
             </button>
         </div>
     </div>
-    <div class="row col-9">
-        <app-device-history></app-device-history>
-    </div>
-
+    <app-device-history></app-device-history>
 
 </div>

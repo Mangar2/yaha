@@ -305,7 +305,12 @@ export const devices: any = [
     },
     {
         ...measured,
-        name: "outside pressure",
+        topic: "%/%/%/%/pressure",
+        pictures: pictures.pressure
+    },
+    {
+        ...measured,
+        name: "pressure",
         topic: "outdoor/garden/main/weather/pressure",
         pictures: pictures.pressure
     },

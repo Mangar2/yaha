@@ -1,81 +1,14 @@
-
-.detail-card {
-    display: flex;
-    flex: 1 1 0px;
-    flex-direction: column;
-    position: relative;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    background-color: #fafafa;
-    min-width: 320px;
-    max-width: 600px;
-    height: auto;
-    padding: 8px;
-    margin: 0;
-}
-
-.detail-header {
-    display: flex;
-    flex-direction: row;
-    height: auto;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
 .detail-headline {
-    display: flex;
-    line-height: 64px;
     font-size: 24px;
     font-weight: 600;
-    width: 73%;
-}
-
-.detail-data {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.detail-data-row {
-    display: flex;
-    flex-direction: row;
-    height: auto;
-    justify-content: space-between;
+    line-height: 2;
 }
 
 .detail-img {
     width: 64px;
     height: 64px;
     border-radius: .25rem;
-    margin-left: 0px;
 }
-
-.detail-label, .detail-text {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    padding: 3px 5px 3px 5px;
-}
-
-.detail-label, .detail-text {
-    color: #495057;
-}
-
-.detail-text {
-    border-radius: 4px;
-}
-
-.detail-label {
-    width: 25%;
-}
-
-.detail-text {
-    width: 70%;
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
-}
-
-
 
 .active {
     background-color: #007bff;

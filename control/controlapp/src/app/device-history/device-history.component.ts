@@ -12,7 +12,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DeviceInfo } from '../device/device';
+import { DeviceSubject } from '../device/device';
 
 @Component({
     selector: 'app-device-history',
@@ -27,7 +27,7 @@ export class DeviceHistoryComponent implements OnInit {
      * Creates a device history component showing history information
      * @param device NEEDED and used in device-history.component.html
      */
-    constructor(public device: DeviceInfo) {
+    constructor(public deviceSubject: DeviceSubject) {
 
     }
   

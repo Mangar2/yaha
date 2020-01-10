@@ -5,7 +5,8 @@ import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ApiService } from '../service/api.service';
 
-import { DeviceStorage, Devices } from '../device/device';
+import { Devices } from '../device/device';
+import { DeviceStorage } from '../device/DeviceStorage'
 
 @Component({
     selector: 'app-device-list',

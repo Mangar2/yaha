@@ -15,7 +15,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { menu } from './location-menu.structure.js';
-import { DeviceStorage } from '../device/device';
+import { DeviceStorage } from '../device/DeviceStorage'
 
 
 @Component({

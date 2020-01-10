@@ -1,8 +1,8 @@
 import { ViewChild, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Chart } from '../../Chart.js'
-import { timer } from 'rxjs';
+import { timer, Subscription } from 'rxjs';
 
-import { DeviceInfo } from '../device/device';
+import { DeviceSubject, DeviceInfo } from '../device/device';
 
 @Component({
     selector: 'app-device-chart',
@@ -10,33 +10,33 @@ import { DeviceInfo } from '../device/device';
     styleUrls: ['./device-chart.component.css']
 })
 export class DeviceChartComponent implements OnInit {
-    @ViewChild('lineChart', { static: false }) private chartRef;
     chart = []
+    lastDataTime
+    subscription: Subscription = new Subscription()
 
-    constructor(public device: DeviceInfo) { }
+    constructor(public deviceSubject: DeviceSubject) { 
+    }
 
-    createChart() {
+    createChart(device: DeviceInfo) {
         const now = new Date()
         now.setHours(0, 0, 0, 0)
         const data = []
-        console.log(this.device)
-        if (this.device.history === undefined) { console.log("undefined") }
-        if (this.device.history) {
-            for (let entry of this.device.history) {
+        if (device.history) {
+            for (let entry of device.history) {
                 const curTime = new Date(entry.time)
                 if (curTime < now) {
-                    break;
+                    //break;
                 }
                 data.push({ t: curTime, y: entry.value })
             }
         }
-        console.log(data)
         const options = {
             type: 'line',
             data: {
                 datasets: [
                     {
-                        label: this.device.name,
+                        label: device.name,
+                        cubicInterpolationMode: 'monotone',
                         borderColor: '#7cb5ec',
                         pointRadius: 1,
                         fill: false,
@@ -69,16 +69,24 @@ export class DeviceChartComponent implements OnInit {
             }
         }
         var canvas = <HTMLCanvasElement>document.getElementById("chartJSContainer");
-        var ctx = canvas.getContext("2d");
-        this.chart = new Chart(ctx, options);
+        if (canvas) {
+            var ctx = canvas.getContext("2d");
+            this.chart = new Chart(ctx, options);
+        }
     }
 
     ngOnInit() {
-        const pollForUpdate = timer(5, 2 * 1000)
-        pollForUpdate.subscribe(() => {
-           this.createChart()
-        })
+        this.subscription.add(this.deviceSubject.subscribe((device) => {
+            const lastDataTime = device.history[0].time
+            if (this.lastDataTime !== lastDataTime) {
+                this.createChart(device)
+            }
+            this.lastDataTime = lastDataTime
+        }))
+    }
 
+    ngOnDestroy() {
+        this.subscription.unsubscribe()
     }
 
 }

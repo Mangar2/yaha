@@ -1,12 +1,12 @@
 <app-breadcrumb></app-breadcrumb>
 <div class="container">
 
-    <div class="row" *ngIf="device">
-        <div class="container col-12 col-lg-6">
+    <div class="row">
+        <div class="container col-12 col-lg-6" *ngIf="device"> 
             <div class="row mt-md-3 mb-3">
                 <div class="col-sm-2 align-items-stretch">
                     <img class="detail-img"
-                        *ngIf="device && device.value !== undefined && device.pictures !== undefined && device.pictures['on']"
+                        *ngIf="device.value !== undefined && device.pictures !== undefined && device.pictures['on']"
                         alt="bild"
                         [src]="device.pictures[device.value] ? device.pictures[device.value] : device.pictures['on']" />
                 </div>
@@ -29,7 +29,7 @@
                 </div>
             </form>
             <button type="button" class="btn btn-primary btn-block col-sm-12"
-                (click)="onUpdate()" *ngIf="supportsUpdate">
+                (click)="onUpdate()" *ngIf="supportsSetValue">
                 update
             </button>
             <button type="button" class="btn btn-block col-sm-12"

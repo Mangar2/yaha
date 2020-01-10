@@ -7,10 +7,11 @@ import { DeviceListComponent } from './device-list/device-list.component';
 
 
 const routes: Routes = [
-    { path: '', component: RootMenuComponent },
+    { path: '', redirectTo: 'devicelist', pathMatch: 'full' },
     { path: 'devicedetails/:topicFilter', component: DeviceDetailsComponent },
     { path: 'devicelist', component: DeviceListComponent },
-    { path: 'devicelist/:topicFilter', component: DeviceListComponent }
+    { path: 'devicelist/:topicFilter', component: DeviceListComponent },
+    { path: '**', redirectTo: 'devicelist', pathMatch: 'full' }
 ];
 
 @NgModule({

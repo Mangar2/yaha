@@ -3,7 +3,7 @@
     <a class='list-group-item list-group-item-action' 
         *ngFor="let item of menu" 
         [class.font-weight-bold]="item.link === baseLink"
-        [class.pl-3]="item.ling !== baseLink"
+        [class.pl-3]="item.link !== baseLink"
         [class.active]="active === item.link"
         [routerLink]="['/devicelist/' + item.link]" >
         {{item.name}}

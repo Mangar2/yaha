@@ -46,6 +46,8 @@ export class ApiService {
      * @param levelAmount amount of data level to retrieve
      */
     getDevice(topic: string, history: boolean, levelAmount: number = 1): Observable<HttpResponse<DeviceInfo>> {
+        // The app uses '|' instead of '/' to get around angular routing, the interface needs '/'
+        topic = topic.split('|').join('/')
         const data = {
             topic,
             history: history ? "true" : "false",
@@ -61,6 +63,8 @@ export class ApiService {
      * @param value value to set
      */
     publish (topic: string, value: string ): Observable<HttpResponse<PublishResult>> {
+        // The app uses '|' instead of '/' to get around angular routing, the interface needs '/'
+        topic = topic.split('|').join('/')
         const data = {
             topic: topic + '/set',
             value: value,

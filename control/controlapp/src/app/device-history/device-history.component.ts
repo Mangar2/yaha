@@ -27,7 +27,7 @@ export class DeviceHistoryComponent implements OnInit {
      * Creates a device history component showing history information
      * @param device NEEDED and used in device-history.component.html
      */
-    constructor(private device: DeviceInfo) {
+    constructor(public device: DeviceInfo) {
 
     }
   

@@ -1,14 +1,14 @@
 <app-breadcrumb></app-breadcrumb>
 
-<div class="container" role="main">
+<div class="container-xl" role="main">
 
     <div class = "row mt-md-3">
-        <div class="col d-none d-md-block">
+        <div class="col d-sm-block">
             <app-location-menu></app-location-menu>
         </div>
 
         <!-- Cards -->
-        <div class="col-md-8 col-lg-9">
+        <div class="col-sm-7 col-md-8 col-lg-9">
             <div class = "row">
                 <div class="card justify-content-between card-adapt" *ngFor="let device of devices.devices">
                     <a class="card-clickable flex-fill" (click)="onClick(device)">

@@ -17,6 +17,7 @@ import { DeviceListComponent } from './device-list/device-list.component';
 import { DeviceHistoryComponent } from './device-history/device-history.component';
 import { RootMenuComponent } from './root-menu/root-menu.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { DeviceChartComponent } from './device-chart/device-chart.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     ReasonToTextPipe,
     DeviceHistoryComponent,
     RootMenuComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    DeviceChartComponent
   ],
   imports: [
     BrowserModule,

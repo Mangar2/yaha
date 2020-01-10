@@ -356,23 +356,24 @@ export class DeviceStorage {
      * The topic supports the wildchard '%' matching any topic chunk and '#' matching the rest
      */
     public updateNodes(device: Device) {
+        const topic = device.topic.split('|').join('/')
         if (device.topic !== undefined) {
-            const nodes = this.getNodes(device.topic) 
+            const nodes = this.getNodes(topic) 
             for (let node of nodes) {
                 this.updateNode(node, device)
             }
         }
+        
     }
 
     /**
      * Replaces (updates or inserts) a node in the tree
-     * @param topic topic of the node
-     * @param value value of the node
-     * @param reason reason for the last value change
+     * @param device device containing update information
      */
     public replaceNode(device: Device) {
+        const topic = device.topic.split('|').join('/')
         if (device.topic !== undefined) {
-            let node = this.addNode(device.topic)
+            let node = this.addNode(topic)
             this.updateNode(node, device)
         }
     }
@@ -383,7 +384,6 @@ export class DeviceStorage {
      */
     public replaceManyNodes(payload: Payload) {
         if (payload) {
-
             for (let topic in payload) {
                 if (typeof(topic) === 'string' && topic !== '') {
                     let info = payload[topic]

@@ -54,17 +54,19 @@ export class DeviceListComponent {
 
      /**
      * Read data from the server based on a topic
-     * @param topic topic to fetch data for
+     * @param deviceTopic topic to fetch data for
      * @param history true, to add the history
      */
-    updateDeviceFromApi(topic: string, history: boolean) {
+    updateDeviceFromApi(deviceTopic: string, history: boolean) {
+        const topic = deviceTopic.split('|').join('/')
         this.deviceApi.getDevice(topic, history).
             subscribe(resp => {
-                const data = resp.body
-                const deviceInfo = data.payload[topic]
-                const device = this.devices.getDevice(topic)
-                this.deviceStorage.updateNodes(device)
-                this.devices.updateDevice(topic, deviceInfo)   
+                const payload = resp.body.payload
+                this.deviceStorage.replaceManyNodes(payload)
+                const nodes = this.deviceStorage.getNodes(topic)
+                if (nodes[0] !== undefined) {
+                    this.devices.updateDevice(deviceTopic, nodes[0])   
+                }
             })
     }
 

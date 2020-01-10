@@ -24,9 +24,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
-            ],
-            "scripts": []
+                "src/bootstrap4.4.1.css"
+              ],
+              "scripts": [
+                  "src/chart.js"
+              ]
           },
           "configurations": {
             "production": {
@@ -89,9 +91,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/bootstrap4.4.1.css"
             ],
-            "scripts": []
+            "scripts": [
+                "src/chart.js"
+            ]
           }
         },
         "lint": {

@@ -35,14 +35,23 @@ The Broker is built according the mqtt principle. Please read the mqtt documenta
 
 ### Configuration options
 
-* inFlightWindow - Amount of QoS=1 messages send in the same time for one topic
-* timeoutInMilliseconds - timeout in Milliseconds to wait for an answer of a http publish
-* maxRetryCount - amount of retries to publish to a client before disconnecting it
-* maxQueueSize - amount of QoS=1 messages in a queue for the same topic
-* directory - directory to store the broker state
-* fileName - name of the file to store the broker state (the system will add a timestamp and an extension to the filename )
-* port - the port the broker will listen on
-* log - logging settings. Supported logging modules "received" (for received messages) and "send" (for send messages)
+* inFlightWindow - Amount of QoS=1 messages send in the same time for one topic, default = 1
+* timeoutInMilliseconds - timeout in Milliseconds to wait for an answer of a http publish, default = 10 * 1000
+* maxRetryCount - amount of retries to publish to a client before disconnecting it, default = 10
+* maxQueueSize - amount of QoS=1 messages in a queue for the same topic, default = 100
+* directory - directory to store the broker state, default = '.'
+* fileName - name of the file to store the broker state (the system will add a timestamp and an extension to the filename ), default = 'broker'
+* port - the port the broker will listen on, default = 9001
+* log - logging settings. Supported logging modules "received" (for received messages) and "send" (for send messages), default = log all system messages
+
+### services
+
+The broker supports two services for debugging
+
+#### the client service
+
+* Get all clients: GET host/clients or
+* Get one client: GET host/clients/[clientid]
 
 ### Not (maybe yet) Supported
 

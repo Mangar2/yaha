@@ -7,3 +7,6 @@ messages20*
 yaha*
 devices.json
 jsdoc*
+.vscode
+launch.json
+settings.json

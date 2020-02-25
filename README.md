@@ -80,3 +80,16 @@ External services are connections to external applications for sending, receivin
 ### Install external services
 
 npm install @mangar2/externalservices
+
+## Internal services
+
+Internal services are services connecting to internal actors or automation rules
+
+### Install internal services
+
+npm install @mangar/runservices
+
+### motion
+
+handling automation based on motion, see details in
+[Motion](https://github.com/Mangar2/yaha/wiki/Motion)

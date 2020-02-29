@@ -1,11 +1,19 @@
 {
     "rules": {
+        "initialize": {
+            "check": ["=", "$SYS/presence", "initial"],
+            "topic": ["$SYS/presence", "system/state/presence"],
+            "requireAny": [
+                "+/+/+/motion sensor/detection state"
+            ],
+            "value": "awake"
+        },
         "sleeping": {
             "time": "21:00",
             "duration": "8:00",
             "check": ["=", "$SYS/presence", "awake"],
             "durationWithoutMovementInMinutes": 15,
-            "require": [
+            "requireAll": [
                 "first/hallway/main/motion sensor/detection state"
             ],
             "allow": [
@@ -19,6 +27,9 @@
         "wakeup": {
             "check": ["=", "$SYS/presence", "sleeping"],
             "durationWithoutMovementInMinutes": 0,
+            "requireAny": [
+                "+/+/+/motion sensor/detection state"
+            ],
             "deny": [
                 "first/hallway/main/motion sensor/detection state",
                 "first/bathroom/main/motion sensor/detection state"
@@ -29,7 +40,7 @@
         "homecoming": {
             "check": ["=", "$SYS/presence", "absent"],
             "durationWithoutMovementInMinutes": 0,
-            "require": [
+            "requireAll": [
                 "ground/hallway/wall/motion sensor/detection state",
                 "ground/hallway/center/motion sensor/detection state"
             ],
@@ -42,13 +53,16 @@
         "alert": {
             "check": ["=", "$SYS/presence", "absent"],
             "durationWithoutMovementInMinutes": 0,
+            "requireAny": [
+                "+/+/+/motion sensor/detection state"
+            ],
             "topic": ["$SYS/alarm/set"],
             "value": "movement"
         },
         "leaving": {
             "check": ["=", "$SYS/presence", "awake"],
             "durationWithoutMovementInMinutes": 30,
-            "require": [
+            "requireAll": [
                 "ground/hallway/wall/motion sensor/detection state"
             ],
             "allow": [
@@ -64,7 +78,7 @@
             "duration": "2:00",
             "check": ["=", "$SYS/presence", "awake"],
             "durationWithoutMovementInMinutes": 20,
-            "require": [
+            "requireAll": [
                 "ground/hallway/wall/motion sensor/detection state"
             ],
             "allow": [
@@ -80,7 +94,7 @@
             "duration": "00:15",
             "durationWithoutMovementInMinutes": 0,
             "check": ["=", "$SYS/presence", "absent"],
-            "require": [
+            "requireAll": [
                 "first/study/main/motion sensor/detection state"
             ],
             "topic": "$SYS/cleaning/first",
@@ -88,7 +102,8 @@
         },        
         "cleaningFirstFinished": {
             "durationWithoutMovementInMinutes": 15,
-            "require": [
+            "check": ["=", "$SYS/cleaning/first", "cleaning"],
+            "requireAll": [
                 "first/study/main/motion sensor/detection state"
             ],
             "topic": "$SYS/cleaning/first",
@@ -99,7 +114,7 @@
             "duration": "00:15",
             "durationWithoutMovementInMinutes": 0,
             "check": ["=", "$SYS/presence", "absent"],
-            "require": [
+            "requireAll": [
                 "ground/hallway/center/motion sensor/detection state"
             ],
             "topic": "$SYS/cleaning/ground",
@@ -107,7 +122,8 @@
         },        
         "cleaningGroundFinished": {
             "durationWithoutMovementInMinutes": 15,
-            "require": [
+            "check": ["=", "$SYS/cleaning/ground", "cleaning"],
+            "requireAll": [
                 "ground/hallway/center/motion sensor/detection state"
             ],
             "topic": "$SYS/cleaning/ground",

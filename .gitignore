@@ -10,3 +10,4 @@ jsdoc*
 .vscode
 launch.json
 settings.json
+scans

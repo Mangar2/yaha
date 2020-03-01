@@ -1,14 +1,32 @@
 {
     "rules": {
+        "setReceived": {
+            "anyOf": [
+                "$SYS/presence/set", "system/presence/set"
+            ],
+            "topic": {
+                "$SYS/presence": ["switch", "$SYS/presence/set", { 
+                    "0": "absent", "1": "awake", "absent": "absent", "sleeping": "sleeping", "awake": "awake"
+                }],
+                "system/presence": ["switch", "$SYS/presence/set", { 
+                    "0": "absent", "1": "awake", "absent": "absent", "sleeping": "sleeping", "awake": "awake"
+                }],
+                "outdoor/garden/main/switch/lightstairs/blink": ["switch", "$SYS/presence/set", { 
+                    "0": "1", "1": "2", "absent": "1", "sleeping": "0", "awake": "2"
+                }]
+            }
+        },
         "initialize": {
             "check": ["=", "$SYS/presence", "initial"],
-            "topic": ["$SYS/presence", "system/state/presence"],
+            "topic": ["$SYS/presence", "system/presence"],
             "anyOf": [
                 "+/+/+/motion sensor/detection state"
             ],
             "value": "awake"
         },
         "sleeping": {
+            "time": "21:00",
+            "duration": "8:00",
             "check": ["=", "$SYS/presence", "awake"],
             "durationWithoutMovementInMinutes": 15,
             "allOf": [
@@ -19,7 +37,7 @@
                 "first/study/main/motion sensor/detection state",
                 "first/dressingroom/main/motion sensor/detection state"            
             ],
-            "topic": ["$SYS/presence", "system/state/presence"],
+            "topic": ["$SYS/presence", "system/presence"],
             "value": "sleeping"
         },
         "wakeup": {
@@ -32,7 +50,7 @@
                 "first/hallway/main/motion sensor/detection state",
                 "first/bathroom/main/motion sensor/detection state"
             ],
-            "topic": ["$SYS/presence", "system/state/presence"],
+            "topic": ["$SYS/presence", "system/presence"],
             "value": "awake"
         },
         "homecoming": {
@@ -45,7 +63,7 @@
             "allow": [
                 "ground/wardrobe/main/motion sensor/detection state"
             ],
-            "topic": ["$SYS/presence", "system/state/presence"],
+            "topic": ["$SYS/presence", "system/presence"],
             "value": "awake"
         },
         "alert": {
@@ -68,7 +86,7 @@
                 "ground/hallway/center/motion sensor/detection state",
                 "first/hallway/main/motion sensor/detection state"
             ],
-            "topic": ["$SYS/presence", "system/state/presence"],
+            "topic": ["$SYS/presence", "system/presence"],
             "value": "absent"
         },
         "leaving2": {
@@ -84,7 +102,7 @@
                 "ground/hallway/center/motion sensor/detection state",
                 "first/hallway/main/motion sensor/detection state"
             ],
-            "topic": ["$SYS/presence", "system/state/presence"],
+            "topic": ["$SYS/presence", "system/presence"],
             "value": "absent"
         },
         "cleaningFirst": {

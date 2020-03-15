@@ -2,7 +2,7 @@
 broker20*
 message20*
 messages20*
-.eslintrc.json
+.eslint*.*
 *.pem
 yaha*
 devices.json
@@ -12,3 +12,4 @@ launch.json
 settings.json
 scans
 motionrules.json
+automationrules.json

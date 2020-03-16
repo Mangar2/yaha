@@ -1,0 +1,51 @@
+{
+    "alert": {
+        "rules": {
+            "motion": {
+                "check": ["and", 
+                    ["=", "$SYS/presence", "absent"], 
+                    ["!=", "$SYS/alert/motion", 1],
+                    ["!=", "$SYS/cleaning/first", "cleaning"], 
+                    ["!=", "$SYS/cleaning/ground", "cleaning"]
+                ],
+                "cooldownInSeconds": 1200,
+                "anyOf": [
+                    "+/+/+/motion sensor/detection state"
+                ],
+                "topic": { "$SYS/alert/motion": 2 }
+            },
+            "nomotion": {
+                "check": [">", "$SYS/alert/motion", 0],
+                "durationWithoutMovementInMinutes": 30,
+                "topic": { "$SYS/alert/motion": 0 }
+            },
+            "awake": {
+                "check": ["and", ["=", "$SYS/presence", "awake"], [">", "$SYS/alert/motion", 0]],
+                "topic": { "$SYS/alert/motion": 0 }
+            },
+            "water": {
+                "check": ["!=", "cellar/boilerroom/main/water leakage/detection state", 0],
+                "topic": { 
+                    "$SYS/alert/water": 
+                    ["if", ["=", "cellar/boilerroom/main/water leakage/detection state", 1], 2, 0]
+                }
+            },
+            "window": {
+                "value": 
+                    ["if",
+                        ["and", 
+                            ["=", "$SYS/presence", "absent"],
+                            ["or", 
+                                ["!=", "cellar/boilerroom/main/window/detection state", 0],
+                                ["!=", "cellar/storeroom/main/window/detection state", 0],
+                                ["!=", "cellar/hobbycellar/east/window/detection state", 0],
+                                ["!=", "cellar/hobbycellar/north/window/detection state", 0]
+                            ]
+                        ],
+                        2, 0
+                    ],
+                "topic": "$SYS/alert/window"
+            }
+        }
+    }
+}

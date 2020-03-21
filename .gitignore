@@ -11,5 +11,6 @@ jsdoc*
 launch.json
 settings.json
 scans
+coverage
 motionrules.json
 automationrules.json

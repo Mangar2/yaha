@@ -14,4 +14,10 @@ scans
 coverage
 motionrules.json
 automationrules.json
+livingroomrules.json
+motionrules.json
 .scannerwork
+./*.js
+sonar-project.properties
+.eslintignore
+.eslintrc.json

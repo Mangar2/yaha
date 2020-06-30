@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * @license
  * This software is licensed under the GNU LESSER GENERAL PUBLIC LICENSE Version 3. It is furnished
@@ -13,9 +15,4 @@
 
 'use strict'
 
-const Broker = require('@mangar2/broker')
-const allConfig = require('../../../yahaconfig.json')
-const config = require('@mangar2/config')(allConfig)
-
-const broker = new Broker(config.broker)
-broker.run()
+require('@mangar2/runservice')

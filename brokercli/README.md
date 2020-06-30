@@ -9,3 +9,11 @@ This is the command line wrapper for the mqtt-style broker based on http
 | **Author** | Volker Böhm |
 | **Copyright** | Copyright ( c ) 2020 Volker Böhm |
 | **License** | This software is licensed under the GNU LESSER GENERAL PUBLIC LICENSE Version 3 . It is furnished "as is" , without any support , and with no warranty , express or implied , as to its usefulness for any purpose . |
+
+## Parameter
+
+--env \[Environment\]
+
+### Environment
+
+Name of the environment to read from the configuration file (development, test, staging or production)

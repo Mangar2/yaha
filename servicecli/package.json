@@ -27,6 +27,6 @@
     "url": "https://github.com/Mangar2/yaha/blob/master/servicecli/servicecli"
   },
   "dependencies": {
-    "@mangar2/runservice": "latest"
+    "@mangar2/runservices": "latest"
   }
 }

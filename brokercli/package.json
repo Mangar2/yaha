@@ -4,7 +4,7 @@
   "description": "implements a 'mqtt type' http server",
   "main": "brokercli.js",
   "scripts": {
-    "run" : "node brokercli.js",
+    "run": "node brokercli.js",
     "lint": "eslint *.js",
     "prepublishOnly": "npm run lint && npm test"
   },
@@ -23,8 +23,8 @@
     "url": "https://github.com/Mangar2/yaha/blob/master/brokercli/brokercli"
   },
   "dependencies": {
-    "@mangar2/broker" : "latest",
-    "@mangar2/config" : "latest",
+    "@mangar2/broker": "latest",
+    "@mangar2/config": "latest",
     "@mangar2/utils": "latest",
     "@mangar2/configuration": "latest",
     "@mangar2/checkinput": "latest"

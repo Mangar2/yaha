@@ -18,16 +18,60 @@ const CheckInput = require('@mangar2/checkinput')
 const checkConfiguration = new CheckInput({
     type: 'object',
     properties: {
-        port: { type: 'number', minimum: 1025, maximum: 65536 },
-        persistInterval: { type: 'number', minimum: 0, maximum: 365 * 24 * 3600 * 1000 },
+        port: {
+            description: 'number of the port the broker listens to',
+            type: 'number',
+            minimum: 1,
+            maximum: 65536
+        },
+        persistInterval: {
+            description: 'amount of millisecons between persisting the state to a file',
+            type: 'number',
+            minimum: 0,
+            maximum: 365 * 24 * 3600 * 1000
+        },
         connections: {
+            description: 'connection configuration',
             type: 'object',
             properties: {
-                fileName: { type: 'string' },
-                directory: { type: 'string' },
+                inFlightWindow: {
+                    description: 'amount of parallel calls per topic.',
+                    type: 'number',
+                    minimum: 1,
+                    maximum: 100
+
+                },
+                timeoutInMilliseconds: {
+                    description: 'timeout in Milliseconds to wait for an answer of a http publish',
+                    type: 'number',
+                    minimum: 0,
+                    maximum: 3600 * 1000
+                },
+                maxRetryCount: {
+                    description: 'amount of retries to publish to a client before disconnecting it',
+                    type: 'number',
+                    minimum: 1,
+                    maximum: 1000
+                },
+                maxQueueSize: {
+                    description: 'amount of QoS=1 or QoS=2 messages in a queue for the same topic',
+                    type: 'number',
+                    minimum: 1,
+                    maximum: 10000
+                },
+                fileName: {
+                    description: 'name of the file to store the broker state (adding a timestamp to the filename)',
+                    type: 'string'
+                },
+                directory: {
+                    description: 'directory to store the broker state',
+                    type: 'string'
+                },
                 log: { $ref: '#log' }
             },
-            required: ['fileName', 'directory'],
+            required: ['inFlightWindow', 'timeoutInMilliseconds',
+                'maxRetryCount', 'maxQueueSize',
+                'fileName', 'directory'],
             additionalProperties: false
         }
     },
@@ -60,6 +104,10 @@ const defaultConfiguration = {
     port: 9001,
     persistInterval: 60 * 1000,
     connections: {
+        inFlightWindow: 1,
+        timeoutInMilliseconds: 10000,
+        maxRetryCount: 10,
+        maxQueueSize: 1000,
         fileName: 'broker',
         directory: '.',
         log: [{

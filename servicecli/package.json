@@ -1,6 +1,6 @@
 {
   "name": "@mangar2/servicecli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "implements a 'mqtt type' http server",
   "main": "servicecli.js",
   "scripts": {

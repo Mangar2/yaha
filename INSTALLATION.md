@@ -52,6 +52,12 @@ If you use pm2. Else start the brokercli directly
   }
 ```
 
+### Tell pm2 to run the broker
+
+```script
+pm2 start /home/pi/yaha/broker/node_modules/@mangar2/brokercli/brokercli.js -- --env production
+```
+
 ### Run the broker, if not using pm2
 
 ```script
@@ -63,6 +69,20 @@ node ./node_modules/@mangar2/brokercli/brokercli
 ```script
 pm2 kill
 pm2 start
+```
+
+## Install runservices
+
+```script
+npm i @mangar2/servicecli
+```
+
+### Tell pm2 to run the messagestore service
+
+please not the blank between the first -- and ./message_store_config.json. This blank is important. It tells pm2 to use the following parameters for node and not for pm2
+
+```script
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js -- /home/pi/yaha/services/message_store_config.json --env production
 ```
 
 ## Update rasberrian (more a note for myself ...)

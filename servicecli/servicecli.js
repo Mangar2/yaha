@@ -15,4 +15,4 @@
 
 'use strict'
 
-require('@mangar2/runservice')
+require('@mangar2/runservices')

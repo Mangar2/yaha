@@ -101,7 +101,7 @@ const checkConfiguration = new CheckInput({
  * Configuration default values
  */
 const defaultConfiguration = {
-    port: 9001,
+    port: 8183,
     persistInterval: 60 * 1000,
     connections: {
         inFlightWindow: 1,

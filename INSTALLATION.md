@@ -90,7 +90,12 @@ npm i @mangar2/servicecli
 
 ### Create a messagestore configuration file
 
-Create the file "message_store_config.json" with the following content
+Create the file "message_store_config.json" with the following content. It contains the settings for the messageStore only.
+
+- The service listens on port 8200
+- Has the name "yaha/messagestore"
+- Requests the broker to queue messages if needed (clean = false)
+- Persists the data in the folder /home/pi/yaha/data
 
 ```JSON
 {
@@ -120,6 +125,57 @@ please not the blank between the first -- and ./message_store_config.json. This 
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name message -- /home/pi/yaha/services/message_store_config.json --env production
 ```
 
+## Install other services
+
+You may install the servicescli multiple times to update only some services. Here we use one code for all services.
+
+### Create a services_config.json configuration file
+
+### Tell pm2 to run the services
+
+```script
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name services -- /home/pi/yaha/services/services_config.json --env production
+```
+
+## Install the automation service
+
+The automation service may be part of the services. I recommend to run it separately, because automation rule updates needs a restart of the service (change it is on the to do list, but not with priority).
+
+### Create a automation_config.json configuraiton file
+
+Example for a configuration file for automation
+
+```JSON
+{
+    "production": {
+        "runservices": {
+            "listener": 8202,
+            "clientId": "yaha/automation",
+            "clean": false,
+            "services": [
+                "automation"
+            ]
+        },
+        "automation": {
+            "longitude": 3.14,
+            "latitude": 1.414,
+            "rules": [
+                "/home/pi/yaha/services/motionrules.json",
+                "/home/pi/yaha/services/automationrules.json",
+                "/home/pi/yaha/services/alertrules.json"
+            ],
+            "intervalInSeconds": 60
+        }
+    }
+}
+```
+
+### Tell mp2 to run the service
+
+```script
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name automation -- /home/pi/yaha/services/automation_config.json --env production
+```
+
 ## Update rasberrian (more a note for myself ...)
 
 ### Update the operating system
@@ -129,3 +185,17 @@ sudo apt update
 ### Update the npm
 
 sudo npm install -g npm
+
+## Apache
+
+### Apache Webserver stoppen
+
+sudo /etc/init.d/apache2 stop
+
+### Apache Webserver starten
+
+sudo /etc/init.d/apache2 start
+
+### Apache Webserver stoppen, dann neustarten
+
+sudo /etc/init.d/apache2 restart

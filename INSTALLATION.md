@@ -22,6 +22,13 @@ sudo npm install pm2
 
 ssh pi@yahapi
 
+## Recommended directory tree
+
+- ./home/yaha
+- ./home/yaha/broker    # contains the broker software
+- ./home/yaha/data      # contains data stored by services
+- ./home/yaha/services  # contains the services software including the configuration files
+
 ## Install broker
 
 ### Install the mqtt-style broker
@@ -73,8 +80,36 @@ pm2 start
 
 ## Install runservices
 
+Install the services in your services directory. We use /home/pi/yaha/services here. Feel free to select a different directory
+
 ```script
+mkdir /home/pi/yaha/services
+cd /home/pi/yaha/services
 npm i @mangar2/servicecli
+```
+
+### Create a messagestore configuration file
+
+Create the file "message_store_config.json" with the following content
+
+```JSON
+{
+    "production": {
+        "runservices": {
+            "listener": 8200,
+            "clientId": "yaha/messagestore",
+            "clean": false,
+            "services": [
+                "messageStore"
+            ]
+        },
+        "messageStore": {
+            "persist" : {
+                "directory": "/home/pi/yaha/data"
+            }
+        }
+    }
+}
 ```
 
 ### Tell pm2 to run the messagestore service
@@ -82,7 +117,7 @@ npm i @mangar2/servicecli
 please not the blank between the first -- and ./message_store_config.json. This blank is important. It tells pm2 to use the following parameters for node and not for pm2
 
 ```script
-pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js -- /home/pi/yaha/services/message_store_config.json --env production
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name message -- /home/pi/yaha/services/message_store_config.json --env production
 ```
 
 ## Update rasberrian (more a note for myself ...)

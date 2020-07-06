@@ -10,12 +10,82 @@ Yaha runs on any system supporting node.js (at least I think so). I recommend to
 - pm2 (a multi-node.js tasks manager)
 - A browser (example Apache)
 
+### Install the OS
+
+Install the raspberry pi OS (lite) without desktop.
+
+### Activate OpenSSH
+
+Create an empty file called "ssh" in the boot partition. The file will be deleted automatically on startup.
+
+### Install WLAN
+
+Create a file named wpa_supplicant.conf on the same boot partition with the following content:
+
+```Script
+country=DE
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={
+     ssid="WLAN SSID"
+     scan_ssid=1
+     psk="WLAN PASSWORT"
+     key_mgmt=WPA-PSK
+}
+```
+
+Replace WLAN SSID and WLAN PASSWORD with your configuration. If you use VSCode choose "LF" (click on the CRLF in the footer line to change the line end to Linux format)
+
+### Change password
+
+Once logged on, change your password with
+
+```Script
+sudo passwd pi
+```
+
+### install npm
+
+Check the version you need by calling uname and checking online which version is actual.
+
+```Script
+uname -m
+```
+
+Get the latest armv61 version by:
+
+```Script
+wget https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
+tar -xzf node-v11.15.0-linux-armv6l.tar.gz
+cd node-v11.15.0-linux-armv6l
+sudo cp -R * /usr/local/
+
+#test
+node -v
+npm -v
+```
+
 ## Install pm2
 
 pm2 is not needed, but helps to monitor and run several node tasks. Yaha needs at least two node.js tasks to run, the broker and the services. Separating services in different node tasks is supported, but optional. The advantage of the separation is that single services still run, if one service has a problem.
 
 ```Script
-sudo npm install pm2
+sudo npm install pm2 -g
+sudo pm2 startup
+```
+
+## Install Apache
+
+Update the raspberry pi
+
+```Script
+sudo apt-get update
+```
+
+Install apache. (Web content path is '/var/www')
+
+```Script
+sudo apt-get install apache2
 ```
 
 ## Use ssh to log into the raspberry pi

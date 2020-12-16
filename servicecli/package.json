@@ -1,7 +1,7 @@
 {
   "name": "@mangar2/servicecli",
-  "version": "1.0.1",
-  "description": "implements a 'mqtt type' http server",
+  "version": "1.0.2",
+  "description": "cli interface to run services of the yaha home automation",
   "main": "servicecli.js",
   "scripts": {
     "run": "node servicecli.js",

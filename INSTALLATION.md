@@ -88,6 +88,44 @@ Install apache. (Web content path is '/var/www')
 sudo apt-get install apache2
 ```
 
+## Install open zwave
+
+### Ensure the right timezone
+
+```Script
+sudo raspi-config
+```
+
+using »5 Internationalisation Options | 2 Change Timezone«
+
+### installing open zwave
+
+Go to the yaha directory
+
+```Script
+mkdir zwave
+cd zwave
+wget http://old.openzwave.com/snapshots/openzwave-1.6.10.tar.gz
+tar -xvzf openzwave-1.6.10.tar.gz
+cd openzwave-1.6.10
+make
+sudo make install
+sudo ldconfig
+rm openzwave-1.6.10.tar.gz
+```
+
+### Install openzwave-shared
+
+```Script
+npm install openzwave-shared
+```
+
+List usb devices
+
+```Script
+ls /dev/ttyACM*
+```
+
 ## Use ssh to log into the raspberry pi
 
 ssh pi@yahapi
@@ -240,7 +278,7 @@ Example for a configuration file for automation
 }
 ```
 
-### Tell mp2 to run the service
+### Tell pm2 to run the service
 
 ```script
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name automation -- /home/pi/yaha/services/automation_config.json --env production
@@ -248,24 +286,45 @@ pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js 
 
 ## Update rasberrian (more a note for myself ...)
 
+### Login from powershell 
+
+Select username with -l (raspberry default user name is pi, default password is raspberry)
+
+```Script
+ssh -l pi <destination>
+```
+
+## Update rasberrian (more a note for myself ...)
+
 ### Update the operating system
 
+```Script
 sudo apt update
+sudo apt full-upgrade
+```
 
 ### Update the npm
 
+```Script
 sudo npm install -g npm
+```
 
 ## Apache
 
 ### Apache Webserver stoppen
 
+```Script
 sudo /etc/init.d/apache2 stop
+```
 
 ### Apache Webserver starten
 
+```Script
 sudo /etc/init.d/apache2 start
+```
 
-### Apache Webserver stoppen, dann neustarten
+### Stop Apache Webserver with restart
 
+```Script
 sudo /etc/init.d/apache2 restart
+```

@@ -44,6 +44,14 @@ Once logged on, change your password with
 sudo passwd pi
 ```
 
+### update the os
+
+upate the os from time to time use apt full-upgrade to upgrade all packages
+
+```Script
+apt full-upgrade
+```
+
 ### install npm
 
 Check the version you need by calling uname and checking online which version is actual.
@@ -52,7 +60,7 @@ Check the version you need by calling uname and checking online which version is
 uname -m
 ```
 
-Get the latest armv61 version by:
+Get the latest armv61 version (For Raspi 3 or older) by:
 
 ```Script
 wget https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
@@ -88,6 +96,14 @@ Install apache. (Web content path is '/var/www')
 sudo apt-get install apache2
 ```
 
+## Install git
+
+Installation of git is optional, use it for development purpouses
+
+```Script
+sudo apt install git
+```
+
 ## Install open zwave
 
 ### Ensure the right timezone
@@ -120,7 +136,7 @@ rm openzwave-1.6.10.tar.gz
 npm install openzwave-shared
 ```
 
-List usb devices
+List usb devices (to see, which device to configure)
 
 ```Script
 ls /dev/ttyACM*
@@ -129,6 +145,12 @@ ls /dev/ttyACM*
 ## Use ssh to log into the raspberry pi
 
 ssh pi@yahapi
+
+## install code
+
+```script
+git clone https://github.com/Mangar2/yaha
+```
 
 ## Recommended directory tree
 

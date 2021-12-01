@@ -1,0 +1,8 @@
+{
+    "development": {
+        "test": "ok"
+    },
+    "production": {
+        "test": "not ok"
+    }
+}

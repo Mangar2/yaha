@@ -163,6 +163,8 @@ ssh pi@yahapi
 
 ```script
 git clone https://github.com/Mangar2/yaha
+# get new version
+git pull
 ```
 
 ## Recommended directory tree

@@ -36,6 +36,17 @@ network={
 
 Replace WLAN SSID and WLAN PASSWORD with your configuration. If you use VSCode choose "LF" (click on the CRLF in the footer line to change the line end to Linux format)
 
+### Set IP-Addresses
+
+The default configuration uses dhcp. To configure a static ip-address do the following
+
+```Script
+hostname -I #prints the current IP-address
+sudo nano /etc/dhcpcd.conf #To edit the configuration file
+```
+
+Remove the comment from the ip-address entries and change the addresses accordingly.
+
 ### Change password
 
 Once logged on, change your password with
@@ -139,6 +150,8 @@ npm install openzwave-shared
 List usb devices (to see, which device to configure)
 
 ```Script
+lsusb # lists all usb devices 
+usb-devices # list details for usb devices
 ls /dev/ttyACM*
 ```
 
@@ -304,6 +317,34 @@ Example for a configuration file for automation
 
 ```script
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name automation -- /home/pi/yaha/services/automation_config.json --env production
+#optional services to add
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name external -- /home/pi/yaha/services/external_config.json --env production
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name arduino -- /home/pi/yaha/services/arduino_config.json --env production
+#Save all changes
+pm2 save
+```
+
+## Install serial services
+
+### Create a symlink for the serial device
+
+Linux will not assign the same serial device name after boot (for serial usb adapters ttyUSB0, ttyUSB1). Use symlinks to fix this:
+
+```script
+lsusb # find the usb devices
+usb-devices # list details for usb devices
+sudo nano /etc/udev/rules.d/99-usb-serial.rules
+
+# file content (find vendor id with lsusb)
+# SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", SYMLINK+="rs485"
+# SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", SYMLINK+="arduino"
+
+# Apply changes
+sudo udevadm control --reload-rules && sudo udevadm trigger
+
+# Now use /dev/rs485 and /dev/arduino as the serial device
+# See devices 
+ls /dev/*
 ```
 
 ## Update rasberrian (more a note for myself ...)

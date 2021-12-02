@@ -322,6 +322,7 @@ pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js 
 #optional services to add
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name external -- /home/pi/yaha/services/external_config.json --env production
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name arduino -- /home/pi/yaha/services/arduino_config.json --env production
+pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --name zwave -- /home/pi/yaha/zwave/yahaconfig.json --env production
 #Save all changes
 pm2 save
 ```

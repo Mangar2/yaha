@@ -21,3 +21,4 @@ motionrules.json
 sonar-project.properties
 .eslintignore
 .eslintrc.json
+zwave_config.json

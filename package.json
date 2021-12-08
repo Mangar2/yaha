@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "yet another home automation",
   "main": ".",
-  "dependencies": {
-    "eslint": "^8.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

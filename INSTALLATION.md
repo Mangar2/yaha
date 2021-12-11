@@ -36,6 +36,14 @@ network={
 
 Replace WLAN SSID and WLAN PASSWORD with your configuration. If you use VSCode choose "LF" (click on the CRLF in the footer line to change the line end to Linux format)
 
+### Use ssh to log into the raspberry pi
+
+```Script
+ssh -l pi pi@raspberrypi
+```
+
+Note the raspberry default passwort ist raspberry
+
 ### Set IP-Addresses
 
 The default configuration uses dhcp. To configure a static ip-address do the following
@@ -60,12 +68,23 @@ sudo passwd pi
 upate the os from time to time use apt full-upgrade to upgrade all packages
 
 ```Script
-apt full-upgrade
+sudo apt update # download updates for the new version
+sudo apt upgrade # Save version to perform the update, not removing installed packages if needed
+sudo apt full-upgrade # Riski version to perform the update, removing installed packages if needed
 ```
 
-### install npm
+### update npm 
 
-Check the version you need by calling uname and checking online which version is actual.
+Only update, if the newer version fits together with the node version. The best version for raspberry zero (armV61 architecture) is 6.7.0.
+
+```Script
+sudo npm install -g npm@latest
+sudo npm install -g npm@6.7.0 # for armV61
+```
+
+### install npm and node
+
+Check the version you need by calling uname and checking online which version is actual. "uname" retrieves the processor architecture (example armV61 raspberry zero W and armV71 for raspberry 3B).
 
 ```Script
 uname -m
@@ -82,6 +101,14 @@ sudo cp -R * /usr/local/
 #test
 node -v
 npm -v
+```
+
+### Install node-gyp
+
+Node-gyp is a tool stack to compile native node modules
+
+```Script
+sudo npm install -g node-gyp
 ```
 
 ## Install pm2
@@ -109,7 +136,7 @@ sudo apt-get install apache2
 
 ## Install git
 
-Installation of git is optional, use it for development purpouses
+Installation of git is optional, use it only for development purpouses
 
 ```Script
 sudo apt install git
@@ -127,11 +154,13 @@ using »5 Internationalisation Options | 2 Change Timezone«
 
 ### installing open zwave
 
-Go to the yaha directory
+Optional installation. Install open zwave only, if you have zwave devices (and a zwave USB stick or similar). 
+
+From your "yaha" directory: 
 
 ```Script
-mkdir zwave
-cd zwave
+mkdir service
+cd service
 wget http://old.openzwave.com/snapshots/openzwave-1.6.10.tar.gz
 tar -xvzf openzwave-1.6.10.tar.gz
 cd openzwave-1.6.10
@@ -139,9 +168,16 @@ make
 sudo make install
 sudo ldconfig
 rm openzwave-1.6.10.tar.gz
+cd ..
 ```
 
 ### Install openzwave-shared
+
+Optional installation Install openzwave-shared only, if you have zwave devices and openzwave is already installed
+
+From your "service" directory
+
+create a package.json
 
 ```Script
 npm install openzwave-shared
@@ -155,11 +191,9 @@ usb-devices # list details for usb devices
 ls /dev/ttyACM*
 ```
 
-## Use ssh to log into the raspberry pi
-
-ssh pi@yahapi
-
 ## install code
+
+Optional installation, only for developers with the aim to develop on yaha
 
 ```script
 git clone https://github.com/Mangar2/yaha
@@ -173,6 +207,14 @@ git pull
 - ./home/yaha/broker    # contains the broker software
 - ./home/yaha/data      # contains data stored by services
 - ./home/yaha/services  # contains the services software including the configuration files
+
+## copy files
+
+Files can be copied with scp (secure copy based on ssh). Example (copies a full directory recursively to a target):
+
+```script
+scp -r ./* pi@raspberrypi:/home/pi/yaha/services/*
+```
 
 ## Install broker
 

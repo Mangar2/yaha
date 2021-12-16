@@ -193,9 +193,11 @@ ls /dev/ttyACM*
 
 ## install code
 
-Optional installation, only for developers with the aim to develop on yaha
+Optional installation, only for developers with the aim to develop on yaha. From the directory "yaha"
 
 ```script
+mkdir source
+cd source
 git clone https://github.com/Mangar2/yaha
 # get new version
 git pull
@@ -224,6 +226,12 @@ scp -r ./* pi@raspberrypi:/home/pi/yaha/services/*
 npm i @mangar2/brokercli
 ```
 
+or (if you downloaded all sources from github)
+
+```script
+npm i /home/pi/yaha/source/yaha/brokercli
+```
+
 ### Add brokercli to the ecosystem.config.js file of pm2
 
 If you use pm2. Else start the brokercli directly
@@ -249,7 +257,7 @@ If you use pm2. Else start the brokercli directly
 ### Tell pm2 to run the broker
 
 ```script
-pm2 start /home/pi/yaha/broker/node_modules/@mangar2/brokercli/brokercli.js -- --env production
+pm2 start /home/pi/yaha/broker/node_modules/@mangar2/brokercli/brokercli.js -- /home/pi/yaha/broker/broker_config.json --env production
 ```
 
 ### Run the broker, if not using pm2

@@ -283,6 +283,12 @@ cd /home/pi/yaha/services
 npm i @mangar2/servicecli
 ```
 
+or (if you downloaded all sources from github)
+
+```script
+npm i /home/pi/yaha/source/yaha/servicecli
+```
+
 ### Create a messagestore configuration file
 
 Create the file "message_store_config.json" with the following content. It contains the settings for the messageStore only.
@@ -391,6 +397,7 @@ sudo nano /etc/udev/rules.d/99-usb-serial.rules
 # file content (find vendor id with lsusb)
 # SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", SYMLINK+="rs485"
 # SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", SYMLINK+="arduino"
+# SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", SYMLINK+="zwave"
 
 # Apply changes
 sudo udevadm control --reload-rules && sudo udevadm trigger

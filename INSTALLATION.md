@@ -451,3 +451,19 @@ sudo /etc/init.d/apache2 start
 ```Script
 sudo /etc/init.d/apache2 restart
 ```
+
+## Remote debugging
+
+To remotely debug a node.js process running on a headless raspi
+
+1: start the node task with --inspect
+
+```Script
+node --inspect /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js /home/pi/yaha/services/arduino_config.json --env production
+```
+
+Now copy the link from the node response (example:)
+ws://127.0.0.1:9229/ce7a4dd6-84cf-48d0-a5c2-b5859abfe335
+
+Create a ssh tunnel:
+ssh -L 9221:localhost:9229 pi@rapberrypi

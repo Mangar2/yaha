@@ -1,15 +1,32 @@
 {
-  "name": "yaha",
+  "name": "@mangar2/yaha",
   "version": "1.0.0",
   "description": "yet another home automation",
   "main": ".",
-  "dependencies": {},
-  "devDependencies": {},
+  "keywords": [
+    "home automation",
+    "yaha"
+  ],
+  "author": "Volker Böhm",
+  "license": "LGPL-3.0-or-later",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/Mangar2/yaha"
+  },
+  "dependencies": {
+    "@mangar2/serialdevice": "latest",
+    "@mangar2/rs485interface": "latest",
+    "@mangar2/servicecli": "latest",
+    "@mangar2/automation": "latest",
+    "@mangar2/pushover": "latest",
+    "@mangar2/opensensemap": "latest",
+    "@mangar2/sunnyportal": "latest",
+    "@mangar2/messagestore": "latest",
+    "@mangar2/remoteservice": "latest"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Volker Böhm",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Mangar2/yaha/issues"
   },

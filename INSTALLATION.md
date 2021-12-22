@@ -410,6 +410,8 @@ pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --n
 pm2 save
 ```
 
+start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js /home/pi/yaha/zwave/external_config.json --env production
+
 ## Install serial services
 
 ### Create a symlink for the serial device

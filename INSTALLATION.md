@@ -1,18 +1,21 @@
 # Installation
 
-This file describes how to install yaha on a Raspberry.pi
+This file describes how to install yaha on a linux system
 
-## Install raspberry pi
+## Headless installation of a raspberry pi (Optional)
 
-Yaha runs on any system supporting node.js (at least I think so). I recommend to use a raspberry pi with a "command-line-only" installation. Use ssh to access the raspberry. Additionally install
+Yaha runs on any modern os supporting node.js like linux, windows or mac. A raspberry pi is a good choice to run it - I tested it on a Rasberry Pi 3, zero and zero 2. This chapter descripes how to set up a headless raspberry pi (whithout attaching mouse, keyboard or screen). 
 
-- npm (the nod package manager)
-- pm2 (a multi-node.js tasks manager)
-- A browser (example Apache)
+This chapter describes a headless installation of the operating system.
 
-### Install the OS
+### Install a headless raspberry Pi OS using Raspberry Pi Imager
 
-Install the raspberry pi OS (lite) without desktop.
+This chapter describes how to install raspberry pi lite - without graphical user interface. We will use the system in headless mode only via. command line using ssh later. This is sufficient for yaha home automation. 
+
+- 
+- The raspberry Pi Imager can be found on raspberrypi.com - download and install it for your operation system.
+- Run the Pi Imager and choose Raspberry Pi OS Lite (32-Bit) for installation (press the write button)
+- DO NOT format the disk (when Windows is asking you to do so)
 
 ### Activate OpenSSH
 
@@ -20,7 +23,7 @@ Create an empty file called "ssh" in the boot partition. The file will be delete
 
 ### Install WLAN
 
-Create a file named wpa_supplicant.conf on the same boot partition with the following content:
+Create a file named wpa_supplicant.conf on the same boot partition with the following content (replace the WLAN SSID and the WLAN PASSWORD with your WLAN SSID/Password)
 
 ```Script
 country=DE
@@ -33,8 +36,11 @@ network={
      key_mgmt=WPA-PSK
 }
 ```
-
 Replace WLAN SSID and WLAN PASSWORD with your configuration. If you use VSCode choose "LF" (click on the CRLF in the footer line to change the line end to Linux format)
+
+### Boot the system
+
+Remove the sd card, insert it in your raspberry and switch power on - and wait a minute for the system to boot. 
 
 ### Use ssh to log into the raspberry pi
 
@@ -44,16 +50,7 @@ ssh -l pi pi@raspberrypi
 
 Note the raspberry default passwort ist raspberry
 
-### Set IP-Addresses
-
-The default configuration uses dhcp. To configure a static ip-address do the following
-
-```Script
-hostname -I #prints the current IP-address
-sudo nano /etc/dhcpcd.conf #To edit the configuration file
-```
-
-Remove the comment from the ip-address entries and change the addresses accordingly.
+If you get an error message WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED, then you might have just installed a second raspberry and the windows system is now complaining, that new new raspberry has different keys. Then delete the raspberry entry from the file C:\\Users\\Mangar/.ssh/known_hosts and try again!
 
 ### Change password
 
@@ -65,12 +62,102 @@ sudo passwd pi
 
 ### update the os
 
-upate the os from time to time use apt full-upgrade to upgrade all packages
+upate the os from time to time use apt full-upgrade to upgrade all packages - do this right after installation
 
 ```Script
 sudo apt update # download updates for the new version
-sudo apt upgrade # Save version to perform the update, not removing installed packages if needed
 sudo apt full-upgrade # Riski version to perform the update, removing installed packages if needed
+```
+
+If the system is running for a while you might choose to do a more safe version of the upgrade only:
+
+```Script
+sudo apt update # download updates for the new version
+sudo apt upgrade # Safe version to perform the update, not removing installed packages if needed
+```
+
+### Set a static IP-Address (optional)
+
+The default configuration uses dhcp. If you prefere static ip adresses, you might choose to configure a static ip-address
+
+```Script
+hostname -I #prints the current IP-address
+sudo nano /etc/dhcpcd.conf #To edit the configuration file
+```
+Remove the comment from the ip-address entries and change the addresses accordingly.
+
+## Install needed software on your system (mandatory)
+
+Yaha requires the following software to be installed on your system
+
+- npm
+- node 
+- pm2 (a multi-node.js tasks manager)
+- apache web-server (or equivalent)
+
+### Install npm, node on linux
+
+Check the version you need by calling uname and checking online which version is actual. "uname" retrieves the processor architecture (example armV61 raspberry zero W and armV71 for raspberry 3B).
+
+```Script
+uname -m
+```
+
+Replace the link below with the most actual link and directory name for your ARM version. Hint: the latest armv61 version is https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
+
+```Script
+wget https://nodejs.org/dist/v16.13.1/node-v16.13.1-linux-armv7l.tar.xz
+tar -xf node-v16.13.1-linux-armv7l.tar.xz
+cd node-v16.13.1-linux-armv7l
+sudo cp -R * /usr/local/
+
+#test
+node -v
+npm -v
+```
+
+### Install remaining tools
+
+- node-gyp is needed to install native node packages
+- pm2 is a manager for node tasks we use it in yaha - it is helpful, but not required. 
+- Apache is a web-server required to provide a web-frontend
+- Git is a source code management software - not required but helpful, if you like to code yourself
+- apt autoremove deletes no longer used packages
+
+```Script
+sudo npm install -g node-gyp
+sudo npm install pm2 -g
+sudo pm2 startup
+sudo apt-get install apache2
+sudo apt install git
+sudo apt autoremove
+```
+
+## Install yaha
+
+### create directory structure
+
+```Script
+
+```
+
+### installing open zwave (optional)
+
+Optional installation. Install open zwave only, if you have zwave devices (and a zwave USB stick or similar). 
+
+From your "yaha" directory: 
+
+```Script
+mkdir service
+cd service
+wget http://old.openzwave.com/snapshots/openzwave-1.6.10.tar.gz
+tar -xvzf openzwave-1.6.10.tar.gz
+cd openzwave-1.6.10
+make
+sudo make install
+sudo ldconfig
+rm openzwave-1.6.10.tar.gz
+cd ..
 ```
 
 ### update npm 
@@ -80,66 +167,6 @@ Only update, if the newer version fits together with the node version. The best 
 ```Script
 sudo npm install -g npm@latest
 sudo npm install -g npm@6.7.0 # for armV61
-```
-
-### install npm and node
-
-Check the version you need by calling uname and checking online which version is actual. "uname" retrieves the processor architecture (example armV61 raspberry zero W and armV71 for raspberry 3B).
-
-```Script
-uname -m
-```
-
-Get the latest armv61 version (For Raspi 3 or older) by:
-
-```Script
-wget https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
-tar -xzf node-v11.15.0-linux-armv6l.tar.gz
-cd node-v11.15.0-linux-armv6l
-sudo cp -R * /usr/local/
-
-#test
-node -v
-npm -v
-```
-
-### Install node-gyp
-
-Node-gyp is a tool stack to compile native node modules
-
-```Script
-sudo npm install -g node-gyp
-```
-
-## Install pm2
-
-pm2 is not needed, but helps to monitor and run several node tasks. Yaha needs at least two node.js tasks to run, the broker and the services. Separating services in different node tasks is supported, but optional. The advantage of the separation is that single services still run, if one service has a problem.
-
-```Script
-sudo npm install pm2 -g
-sudo pm2 startup
-```
-
-## Install Apache
-
-Update the raspberry pi
-
-```Script
-sudo apt-get update
-```
-
-Install apache. (Web content path is '/var/www')
-
-```Script
-sudo apt-get install apache2
-```
-
-## Install git
-
-Installation of git is optional, use it only for development purpouses
-
-```Script
-sudo apt install git
 ```
 
 ## Install open zwave

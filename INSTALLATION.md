@@ -76,6 +76,17 @@ sudo apt update # download updates for the new version
 sudo apt upgrade # Safe version to perform the update, not removing installed packages if needed
 ```
 
+### Change the raspberries configuration (optional)
+
+Run raspi-config to change the raspberry´s configuration
+
+```Script
+sudo raspi-config
+```
+
+- Change the Hostname (in Menu 1. System Options) - recommended
+- Change the timezone (5. Localisation Options)
+
 ### Set a static IP-Address (optional)
 
 The default configuration uses dhcp. If you prefere static ip adresses, you might choose to configure a static ip-address
@@ -97,6 +108,22 @@ Yaha requires the following software to be installed on your system
 
 ### Install npm, node on linux
 
+- 1. Update all packages
+- 2. Install node and npm by apt-get 
+- 3. Install "n" the node installation utility
+- 4. Install an actualized version of node (use 14.18.2, as openzwave-shared does not yet support node v. 16 or higher)
+
+```Script
+sudo apt-get update
+sudo apt-get install npm
+sudo npm install -g n
+sudo n 14.18.2
+node -v
+npm -v
+```
+
+#### Alternative manual installation 
+
 Check the version you need by calling uname and checking online which version is actual. "uname" retrieves the processor architecture (example armV61 raspberry zero W and armV71 for raspberry 3B).
 
 ```Script
@@ -106,9 +133,9 @@ uname -m
 Replace the link below with the most actual link and directory name for your ARM version. Hint: the latest armv61 version is https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
 
 ```Script
-wget https://nodejs.org/dist/v16.13.1/node-v16.13.1-linux-armv7l.tar.xz
-tar -xf node-v16.13.1-linux-armv7l.tar.xz
-cd node-v16.13.1-linux-armv7l
+wget https://nodejs.org/dist/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz
+tar -xf node-v15.14.0-linux-armv7l.tar.xz
+cd node-v15.14.0-linux-armv7l
 sudo cp -R * /usr/local/
 
 #test
@@ -126,10 +153,9 @@ npm -v
 
 ```Script
 sudo npm install -g node-gyp
-sudo npm install pm2 -g
+sudo npm install -g pm2
 sudo pm2 startup
 sudo apt-get install apache2
-sudo apt install git
 sudo apt autoremove
 ```
 
@@ -138,7 +164,8 @@ sudo apt autoremove
 ### create directory structure
 
 ```Script
-
+mkdir yaha
+cd yaha
 ```
 
 ### installing open zwave (optional)
@@ -409,8 +436,6 @@ pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --n
 #Save all changes
 pm2 save
 ```
-
-start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js /home/pi/yaha/zwave/external_config.json --env production
 
 ## Install serial services
 

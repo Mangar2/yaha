@@ -14,9 +14,10 @@
       "url": "https://github.com/Mangar2/yaha"
   },
   "dependencies": {
+    "@mangar2/brokercli": "latest",
+    "@mangar2/servicecli": "latest",
     "@mangar2/serialdevice": "latest",
     "@mangar2/rs485interface": "latest",
-    "@mangar2/servicecli": "latest",
     "@mangar2/automation": "latest",
     "@mangar2/pushover": "latest",
     "@mangar2/opensensemap": "latest",

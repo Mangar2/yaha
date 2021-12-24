@@ -52,6 +52,12 @@ Note the raspberry default passwort ist raspberry
 
 If you get an error message WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED, then you might have just installed a second raspberry and the windows system is now complaining, that new new raspberry has different keys. Then delete the raspberry entry from the file C:\\Users\\Mangar/.ssh/known_hosts and try again!
 
+Note: files can be copied with scp (secure copy based on ssh). Example (copies a full directory recursively to a target):
+
+```script
+scp -r ./* pi@raspberrypi:/home/pi/yaha/services/*
+```
+
 ### Change password
 
 Once logged on, change your password with
@@ -76,7 +82,7 @@ sudo apt update # download updates for the new version
 sudo apt upgrade # Safe version to perform the update, not removing installed packages if needed
 ```
 
-### Change the raspberries configuration (optional)
+### Change the raspberries configuration - hostname, timezone, ... (optional)
 
 Run raspi-config to change the raspberry´s configuration
 
@@ -155,6 +161,7 @@ npm -v
 sudo npm install -g node-gyp
 sudo npm install -g pm2
 sudo pm2 startup
+sudo env PATH=$PATH:/usr/local/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 sudo apt-get install apache2
 sudo apt autoremove
 ```
@@ -166,78 +173,90 @@ sudo apt autoremove
 ```Script
 mkdir yaha
 cd yaha
+mkdir data # to store state files of services
 ```
 
 ### installing open zwave (optional)
 
 Optional installation. Install open zwave only, if you have zwave devices (and a zwave USB stick or similar). 
 
-From your "yaha" directory: 
-
 ```Script
-mkdir service
-cd service
-wget http://old.openzwave.com/snapshots/openzwave-1.6.10.tar.gz
-tar -xvzf openzwave-1.6.10.tar.gz
-cd openzwave-1.6.10
+cd \home\pi\yaha
+wget http://old.openzwave.com/downloads/openzwave-1.6.1914.tar.gz
+tar -xvzf openzwave-1.6.1914.tar.gz
+cd openzwave-1.6.1914
 make
 sudo make install
 sudo ldconfig
-rm openzwave-1.6.10.tar.gz
 cd ..
+rm openzwave-1.6.1914.tar.gz
 ```
 
-### update npm 
+### install the packages
+
+```Script
+cd \home\pi\yaha
+npm i @mangar2/brokercli
+npm i @mangar2/servicecli
+npm i @mangar2/serialdevice
+npm i @mangar2/rs485interface
+npm i @mangar2/automation
+npm i @mangar2/pushover
+npm i @mangar2/opensensemap
+npm i @mangar2/sunnyportal
+npm i @mangar2/messagestore
+npm i @mangar2/remoteservice
+npm i @mangar2/zwave # only, if you use zwave - and installed openzwave before
+```
+
+### run the services
+
+The services will be started with pm2 - a runtime manager to control different node packages. It is possible to run all parts of yaha in just one node task, but you are more flexible if you have several services
+
+We will start 4 service packages that you can control by their configuration files
+
+1. the "mqtt-style" broker
+2. the message history store
+3. Services running intern
+4. Services running extern (connecting to remote services)
+5. Save the new cofiguration
+
+```Script
+pm2 start /home/pi/node_modules/@mangar2/brokercli/brokercli.js --name broker --max-memory-restart 100M -- /home/pi/yaha/broker_config.json --env production
+pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name messages --max-memory-restart 200M -- /home/pi/yaha/message_store_config.json --env production
+pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name external --max-memory-restart 100M -- /home/pi/yaha/external_config.json --env production
+pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name internal --max-memory-restart 100M -- /home/pi/yaha/services_config.json --env production
+pm2 save
+```
+
+### test restarting pm 
+
+```script
+pm2 kill
+pm2 resurrect
+```
+
+
+## Update the yaha installation
+
+From time to time, you should update your installation to up-to-date versions. But please be careful updating node, as it requires recompiling the native node packages - especially serial and openzwave_shared. Both might not be compatible with the new node version. Thus I recommend to bakcup the services folder before any update.
+
+### Update the operating system
+
+```Script
+sudo apt update
+sudo apt full-upgrade
+```
+
+### update node/npm 
 
 Only update, if the newer version fits together with the node version. The best version for raspberry zero (armV61 architecture) is 6.7.0.
 
 ```Script
-sudo npm install -g npm@latest
-sudo npm install -g npm@6.7.0 # for armV61
+sudo n [version] # sudo npm install -g npm@6.7.0 - for armV61
 ```
 
-## Install open zwave
 
-### Ensure the right timezone
-
-```Script
-sudo raspi-config
-```
-
-using »5 Internationalisation Options | 2 Change Timezone«
-
-### installing open zwave
-
-Optional installation. Install open zwave only, if you have zwave devices (and a zwave USB stick or similar). 
-
-From your "yaha" directory: 
-
-```Script
-mkdir service
-cd service
-wget http://old.openzwave.com/snapshots/openzwave-1.6.10.tar.gz
-tar -xvzf openzwave-1.6.10.tar.gz
-cd openzwave-1.6.10
-make
-sudo make install
-sudo ldconfig
-rm openzwave-1.6.10.tar.gz
-cd ..
-```
-
-### Install openzwave-shared
-
-Optional installation Install openzwave-shared only, if you have zwave devices and openzwave is already installed
-
-From your "service" directory
-
-create a package.json
-
-```Script
-npm install openzwave-shared
-```
-
-List usb devices (to see, which device to configure)
 
 ```Script
 lsusb # lists all usb devices 
@@ -245,9 +264,9 @@ usb-devices # list details for usb devices
 ls /dev/ttyACM*
 ```
 
-## install code
+## install code (optional)
 
-Optional installation, only for developers with the aim to develop on yaha. From the directory "yaha"
+If you like to develop for yaha, you might download the code from github
 
 ```script
 mkdir source
@@ -257,75 +276,9 @@ git clone https://github.com/Mangar2/yaha
 git pull
 ```
 
-## Recommended directory tree
 
-- ./home/yaha
-- ./home/yaha/broker    # contains the broker software
-- ./home/yaha/data      # contains data stored by services
-- ./home/yaha/services  # contains the services software including the configuration files
+## Other installation options (advanced user only)
 
-## copy files
-
-Files can be copied with scp (secure copy based on ssh). Example (copies a full directory recursively to a target):
-
-```script
-scp -r ./* pi@raspberrypi:/home/pi/yaha/services/*
-```
-
-## Install broker
-
-### Install the mqtt-style broker
-
-```script
-npm i @mangar2/brokercli
-```
-
-or (if you downloaded all sources from github)
-
-```script
-npm i /home/pi/yaha/source/yaha/brokercli
-```
-
-### Add brokercli to the ecosystem.config.js file of pm2
-
-If you use pm2. Else start the brokercli directly
-
-```JavaScript
-  apps : [{
-    name: 'broker',
-    script: '/home/pi/yaha/broker/node_modules/@mangar2/brokercli/brokercli.js',
-    args: '',
-    instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '100M',
-    env: {
-      NODE_ENV: 'production'
-    },
-    env_production: {
-      NODE_ENV: 'production'
-    }
-  }
-```
-
-### Tell pm2 to run the broker
-
-```script
-pm2 start /home/pi/yaha/broker/node_modules/@mangar2/brokercli/brokercli.js -- /home/pi/yaha/broker/broker_config.json --env production
-```
-
-### Run the broker, if not using pm2
-
-```script
-node ./node_modules/@mangar2/brokercli/brokercli
-```
-
-### Restart pm2 to test it
-
-```script
-pm2 kill
-pm2 start
-```
 
 ## Install runservices
 
@@ -461,32 +414,19 @@ sudo udevadm control --reload-rules && sudo udevadm trigger
 ls /dev/*
 ```
 
-## Update rasberrian (more a note for myself ...)
 
-### Login from powershell 
-
-Select username with -l (raspberry default user name is pi, default password is raspberry)
-
-```Script
-ssh -l pi <destination>
-```
-
-## Update rasberrian (more a note for myself ...)
-
-### Update the operating system
-
-```Script
-sudo apt update
-sudo apt full-upgrade
-```
-
-### Update the npm
-
-```Script
-sudo npm install -g npm
-```
 
 ## Apache
+
+### Web page root directory
+
+The root directory to place web pages in in /var/www
+
+```Script
+cd /var/www/html
+mkdir yaha
+cd yaha
+```
 
 ### Apache Webserver stoppen
 

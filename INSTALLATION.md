@@ -459,5 +459,9 @@ node --inspect /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecl
 Now copy the link from the node response (example:)
 ws://127.0.0.1:9229/ce7a4dd6-84cf-48d0-a5c2-b5859abfe335
 
-Create a ssh tunnel:
+Create a ssh tunnel (on the computer with the debugging interface):
 ssh -L 9221:localhost:9229 pi@rapberrypi
+
+In Chrome enter: 
+chrome://inspect
+

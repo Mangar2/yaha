@@ -236,6 +236,34 @@ pm2 kill
 pm2 resurrect
 ```
 
+### install yahagui
+
+The yahagui package is not yet released, but working in an alpha state. The root directory to place web pages in in /var/www. Install yahagui here.
+
+```Script
+cd /var/www/html
+mkdir yaha
+cd yaha
+```
+
+#### Stop apache web-server
+
+```Script
+sudo /etc/init.d/apache2 stop
+```
+
+#### Start apache web server
+
+```Script
+sudo /etc/init.d/apache2 start
+```
+
+#### Restart apache web server
+
+```Script
+sudo /etc/init.d/apache2 restart
+```
+
 
 ## Update the yaha installation
 

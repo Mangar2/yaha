@@ -128,7 +128,7 @@ node -v
 npm -v
 ```
 
-#### Alternative manual installation 
+#### Alternative manual installation for npm/node
 
 Check the version you need by calling uname and checking online which version is actual. "uname" retrieves the processor architecture (example armV61 raspberry zero W and armV71 for raspberry 3B).
 
@@ -164,6 +164,41 @@ sudo pm2 startup
 sudo env PATH=$PATH:/usr/local/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u pi --hp /home/pi
 sudo apt-get install apache2
 sudo apt autoremove
+```
+
+### Create the USB symlinks
+
+Several services needs usb devices - a connection to an arduino or a zwave usb stick. The USB device must be addressed by an non changing device name. Linux supports this by symlinks defined in a configuration file.
+
+First attach the usb devices and then find out the Vendor id:
+
+- **lsusb** lists the usb devices
+- **usb-devices** lists details of the usb devices
+
+Once you found the right vendor id of your usb stick set it to the configuration file:
+
+```script
+sudo nano /etc/udev/rules.d/99-usb-serial.rules
+```
+
+The following is an example - my installation
+
+```file
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", SYMLINK+="rs485"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", SYMLINK+="arduino"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", SYMLINK+="zwave"
+```
+
+Now apply the changes by 
+
+```Script
+sudo udevadm control --reload-rules && sudo udevadm trigger
+```
+
+You should now see the configured devices in the list of available devices
+
+```Script
+ls /dev/* # check the available serial devices. 
 ```
 
 ## Install yaha
@@ -209,6 +244,147 @@ npm i @mangar2/remoteservice
 npm i @mangar2/zwave # only, if you use zwave - and installed openzwave before
 ```
 
+### create the configuration files
+
+Each service needs a configuraiton file. To start all services, the following configuration files are required
+
+- broker_config.json
+- message_store_config.json
+- external_config.json
+- services_config.json
+
+#### Configuration file for the broker
+
+Create a file with the following content (there are more configuration options. Check the readme of the broker packages for more options):
+
+```script
+nano broker_config.json
+```
+
+```JSON
+{
+    "production": {
+        "broker": {
+            "port": 8183,
+            "connections": {
+                "directory": "/home/pi/yaha/data"
+            }
+        }
+    }
+}
+```
+
+- **port** is the port used for the broker
+- **directory** is the directory to save established connections data files
+
+#### Service configuration file structure
+
+All services needs a configuration file. The structure of the configuration file is identical. 
+
+```JSON
+{    
+    "environment": {
+        "runservices": {
+            "listener": 8200,
+            "clientId": "yaha/messagestore",
+            "clean": false,
+            "services": [
+                "service1", "service2", "service3"
+            ]
+        },
+        "service1": {
+        },
+        "service2": {
+        },
+        "service3": {
+        }
+    }
+}
+```
+
+
+- **environment** this is the environment name. The configuration file supports different environments for development, test, production, ... Select the environment by providing the command line parameter --ENV production when starting the script
+- **listener** this is the port the service listens to 
+- **clientId** this is the name of the service
+- **clean** true, if the broker shall delete all information of this services on disconnect
+- **services** list of services to enable. 
+- **service1, 2, 3, ... n** service specific configuration.
+
+
+#### Configuration file for the message store
+
+The message store remembers all the messages and is thus the key data source for yahaGUI. 
+
+```script
+nano message_store_config.json
+```
+
+```JSON
+{    
+    "production": {
+        "runservices": {
+            "listener": 8200,
+            "clientId": "yaha/messagestore",
+            "clean": false,
+            "services": [
+                "messageStore"
+            ]
+        },
+        "messageStore": {
+            "persist" : {
+                "directory": "/home/pi/yaha/data"
+            }
+        }
+    }
+}
+```
+
+- **directory** directory to persist the currently stored messages
+
+#### configuration for external services
+
+External services are services with internet connection. For security reasons, they are separated from the internal services. 
+
+#### configuration for internal services
+
+Internal services are all services to steer the internal devices (automation, connection to arduino, connection to ESP8266, zwave, ...). Please check the service documentation for the available configuration options
+
+```script
+nano services_config.json
+```
+
+```JSON
+{
+    "production": {
+        "runservices": {
+            "listener": 8202,
+            "clientId": "yaha/services",
+            "clean": false,
+            "services": [
+                "automation"
+            ]
+        },
+        "automation": {
+            "longitude": 3.14,
+            "latitude": 1.414,
+            "rules": [
+                "/home/pi/yaha/services/motionrules.json",
+                "/home/pi/yaha/services/automationrules.json",
+                "/home/pi/yaha/services/alertrules.json"
+            ],
+            "intervalInSeconds": 60
+        },
+        "zwave": {
+        },
+        "rs485Interface": {
+        },
+        "serialDevice": {
+        }
+    }
+}
+```
+
+
 ### run the services
 
 The services will be started with pm2 - a runtime manager to control different node packages. It is possible to run all parts of yaha in just one node task, but you are more flexible if you have several services
@@ -221,11 +397,17 @@ We will start 4 service packages that you can control by their configuration fil
 4. Services running extern (connecting to remote services)
 5. Save the new cofiguration
 
+please not the blank between the first -- and the configuration file path. This blank is important. It tells pm2 to use the following parameters for node and not for pm2
+
 ```Script
 pm2 start /home/pi/node_modules/@mangar2/brokercli/brokercli.js --name broker --max-memory-restart 100M -- /home/pi/yaha/broker_config.json --env production
+
 pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name messages --max-memory-restart 200M -- /home/pi/yaha/message_store_config.json --env production
+
 pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name external --max-memory-restart 100M -- /home/pi/yaha/external_config.json --env production
+
 pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name internal --max-memory-restart 100M -- /home/pi/yaha/services_config.json --env production
+
 pm2 save
 ```
 
@@ -284,15 +466,18 @@ Only update, if the newer version fits together with the node version. The best 
 sudo n [version] # sudo npm install -g npm@6.7.0 - for armV61
 ```
 
-
+### update yaha
 
 ```Script
-lsusb # lists all usb devices 
-usb-devices # list details for usb devices
-ls /dev/ttyACM*
+cd /home/pi/yaha
+npm update
 ```
 
-## install code (optional)
+## How to´s (for developers only)
+
+The following chapter provides information how to solve problems - mainly when developing services. 
+
+### install code (optional)
 
 If you like to develop for yaha, you might download the code from github
 
@@ -304,177 +489,7 @@ git clone https://github.com/Mangar2/yaha
 git pull
 ```
 
-
-## Other installation options (advanced user only)
-
-
-## Install runservices
-
-Install the services in your services directory. We use /home/pi/yaha/services here. Feel free to select a different directory
-
-```script
-mkdir /home/pi/yaha/services
-cd /home/pi/yaha/services
-npm i @mangar2/servicecli
-```
-
-or (if you downloaded all sources from github)
-
-```script
-npm i /home/pi/yaha/source/yaha/servicecli
-```
-
-### Create a messagestore configuration file
-
-Create the file "message_store_config.json" with the following content. It contains the settings for the messageStore only.
-
-- The service listens on port 8200
-- Has the name "yaha/messagestore"
-- Requests the broker to queue messages if needed (clean = false)
-- Persists the data in the folder /home/pi/yaha/data
-
-```JSON
-{
-    "production": {
-        "runservices": {
-            "listener": 8200,
-            "clientId": "yaha/messagestore",
-            "clean": false,
-            "services": [
-                "messageStore"
-            ]
-        },
-        "messageStore": {
-            "persist" : {
-                "directory": "/home/pi/yaha/data"
-            }
-        }
-    }
-}
-```
-
-### Tell pm2 to run the messagestore service
-
-please not the blank between the first -- and ./message_store_config.json. This blank is important. It tells pm2 to use the following parameters for node and not for pm2
-
-```script
-pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name message -- /home/pi/yaha/services/message_store_config.json --env production
-```
-
-## Install other services
-
-You may install the servicescli multiple times to update only some services. Here we use one code for all services.
-
-### Create a services_config.json configuration file
-
-### Tell pm2 to run the services
-
-```script
-pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name services -- /home/pi/yaha/services/services_config.json --env production
-```
-
-## Install the automation service
-
-The automation service may be part of the services. I recommend to run it separately, because automation rule updates needs a restart of the service (change it is on the to do list, but not with priority).
-
-### Create a automation_config.json configuraiton file
-
-Example for a configuration file for automation
-
-```JSON
-{
-    "production": {
-        "runservices": {
-            "listener": 8202,
-            "clientId": "yaha/automation",
-            "clean": false,
-            "services": [
-                "automation"
-            ]
-        },
-        "automation": {
-            "longitude": 3.14,
-            "latitude": 1.414,
-            "rules": [
-                "/home/pi/yaha/services/motionrules.json",
-                "/home/pi/yaha/services/automationrules.json",
-                "/home/pi/yaha/services/alertrules.json"
-            ],
-            "intervalInSeconds": 60
-        }
-    }
-}
-```
-
-### Tell pm2 to run the service
-
-```script
-pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name automation -- /home/pi/yaha/services/automation_config.json --env production
-#optional services to add
-pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name external -- /home/pi/yaha/services/external_config.json --env production
-pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name arduino -- /home/pi/yaha/services/arduino_config.json --env production
-pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --name zwave -- /home/pi/yaha/zwave/yahaconfig.json --env production
-#Save all changes
-pm2 save
-```
-
-## Install serial services
-
-### Create a symlink for the serial device
-
-Linux will not assign the same serial device name after boot (for serial usb adapters ttyUSB0, ttyUSB1). Use symlinks to fix this:
-
-```script
-lsusb # find the usb devices
-usb-devices # list details for usb devices
-sudo nano /etc/udev/rules.d/99-usb-serial.rules
-
-# file content (find vendor id with lsusb)
-# SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", SYMLINK+="rs485"
-# SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", SYMLINK+="arduino"
-# SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", SYMLINK+="zwave"
-
-# Apply changes
-sudo udevadm control --reload-rules && sudo udevadm trigger
-
-# Now use /dev/rs485 and /dev/arduino as the serial device
-# See devices 
-ls /dev/*
-```
-
-
-
-## Apache
-
-### Web page root directory
-
-The root directory to place web pages in in /var/www
-
-```Script
-cd /var/www/html
-mkdir yaha
-cd yaha
-```
-
-### Apache Webserver stoppen
-
-```Script
-sudo /etc/init.d/apache2 stop
-```
-
-### Apache Webserver starten
-
-```Script
-sudo /etc/init.d/apache2 start
-```
-
-### Stop Apache Webserver with restart
-
-```Script
-sudo /etc/init.d/apache2 restart
-```
-
-## Remote debugging
+### Remote debugging
 
 To remotely debug a node.js process running on a headless raspi
 
@@ -484,7 +499,7 @@ To remotely debug a node.js process running on a headless raspi
 node --inspect /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js /home/pi/yaha/services/arduino_config.json --env production
 ```
 
-Now copy the link from the node response (example:)
+Copying the link should not be needed, chrome will automatically identify the available inspect link. If not, copy the link from the node response (example:)
 ws://127.0.0.1:9229/ce7a4dd6-84cf-48d0-a5c2-b5859abfe335
 
 Create a ssh tunnel (on the computer with the debugging interface):
@@ -492,4 +507,5 @@ ssh -L 9221:localhost:9229 pi@rapberrypi
 
 In Chrome enter: 
 chrome://inspect
+
 

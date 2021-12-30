@@ -508,4 +508,55 @@ ssh -L 9221:localhost:9229 pi@rapberrypi
 In Chrome enter: 
 chrome://inspect
 
+### Mount an usb drive (for example a backup device)
 
+First check the available disks
+
+```Script
+sudo fdisk -l
+sudo fsck /dev/sda1 # to check the file system
+```
+
+If it is an exFAT disk, install the exFAT support
+
+
+```Script
+sudo apt-get install exfat-fuse
+sudo apt-get install exfat-utils
+```
+
+Second Create a mount point and mount the device
+
+```Script
+sudo mkdir /mnt/backup 
+sudo mount /dev/sda1 /mnt/backup
+```
+
+Or edit /etc/fstab to permanently mount the device
+
+```Script
+sudo blkid # to ind the PARTUUID you need for fstab
+sudo nano /etc/fstab
+# entry example:
+# PARTUUID=64fbae2f-01  /mnt/backup     exfat   defaults,umask=000 0      0
+```
+
+### Install samba (file sharing)
+
+To mount drives on the raspberry pi install samba
+
+```Script
+sudo apt install samba samba-common-bin
+```
+
+Then configure the samba config file
+
+```Script
+sudo nano /etc/samba/smb.conf
+```
+
+Create the password for samba
+
+```Script
+sudo smbpasswd -a pi
+```

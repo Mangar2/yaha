@@ -408,7 +408,11 @@ pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name externa
 
 pm2 start /home/pi/node_modules/@mangar2/servicecli/servicecli.js --name internal --max-memory-restart 100M -- /home/pi/yaha/services_config.json --env production
 
-pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --name zwave --max-memory-restart 200M -- /home/pi/yaha/zwave/yahaconfig.json --env production
+pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --name zwave --max-memory-restart 200M -- /home/pi/yaha/zwave/yahaconfig.json --env 
+
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name valueservice --max-memory-restart 100M -- /home/pi/yaha/services/new_config.json --env production
+
+production
 
 pm2 save
 ```

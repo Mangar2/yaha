@@ -412,6 +412,9 @@ pm2 start /home/pi/yaha/zwave/node_modules/@mangar2/servicecli/servicecli.js --n
 
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name valueservice --max-memory-restart 100M -- /home/pi/yaha/services/new_config.json --env production
 
+pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name automation --max-memory-restart 100M -- /home/pi/yaha/services/automation_config.json --env production
+
+
 production
 
 pm2 save

@@ -415,7 +415,7 @@ pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js 
 pm2 start /home/pi/yaha/services/node_modules/@mangar2/servicecli/servicecli.js --name automation --max-memory-restart 100M -- /home/pi/yaha/services/automation_config.json --env production
 
 
-production
+pm2 start /home/pi/yaha/kvstore/node_modules/@mangar2/keyvaluestore/index.js --name kvstore --max-memory-restart 60M -- /home/pi/yaha/kvstore/yahakvstore.json --env production
 
 pm2 save
 ```

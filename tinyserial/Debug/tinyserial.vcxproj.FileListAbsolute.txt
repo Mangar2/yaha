@@ -1,2 +1,0 @@
-C:\Programming\yaha\tinyserial\Debug\tinyserial.exe
-C:\Programming\yaha\tinyserial\Debug\tinyserial.pdb

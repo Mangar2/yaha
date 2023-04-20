@@ -30,6 +30,18 @@ const checkConfiguration = new CheckInput({
             minimum: 0,
             maximum: 365 * 24 * 3600 * 1000
         },
+        cors: {
+            description: 'cors settings',
+            type: 'object',
+            properties: {
+                allowOrigin: {
+                    description: 'Access-Control-Allow-Origin settings for put, get and options' ,
+                    tpye: 'string'
+                }
+            },
+            required: ['allowOrigin'],
+            additionalProperties: false
+        },
         connections: {
             description: 'connection configuration',
             type: 'object',
@@ -75,7 +87,7 @@ const checkConfiguration = new CheckInput({
             additionalProperties: false
         }
     },
-    required: ['port', 'persistInterval', 'connections'],
+    required: ['port', 'cors', 'persistInterval', 'connections'],
     additionalProperties: false,
     definitions: {
         log: {
@@ -101,8 +113,11 @@ const checkConfiguration = new CheckInput({
  * Configuration default values
  */
 const defaultConfiguration = {
-    port: 8183,
+    port: 9001,
     persistInterval: 60 * 1000,
+    cors: {
+        allowOrigin: '*'
+    },
     connections: {
         inFlightWindow: 1,
         timeoutInMilliseconds: 10000,

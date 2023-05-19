@@ -885,7 +885,11 @@ please split the following function
     }
 ```
 
-Result (sadly cut off)
+The result was cut off in between. But I could ask him to do the rest by:
+generate _compareArrays, _compareRegex, _compareObjects
+
+The full result
+
 
 ```JavaScript
 /**
@@ -991,7 +995,127 @@ _compareMaps(a, b, path) {
         }
     }
 }
+
+/**
+ * @private
+ * @description
+ * Compares two arrays for equality, including nested objects and arrays
+ * @param {Array} a first array to compare
+ * @param {Array} b second array to compare
+ * @param {string} path path to the array to compare
+ * @throws {string} description of the difference including the path to the array
+ */
+_compareArrays(a, b, path) {
+  if (a.length !== b.length) {
+    throw `${path}: arrays have different length`;
+  }
+
+  for (let i = 0; i < a.length; i++) {
+    this._deepEqualRec(a[i], b[i], `${path}[${i}]`);
+  }
+}
+
+/**
+ * @private
+ * @description
+ * Compares two regular expressions for equality
+ * @param {RegExp} a first regular expression to compare
+ * @param {RegExp} b second regular expression to compare
+ * @param {string} path path to the regular expression to compare
+ * @throws {string} description of the difference including the path to the regular expression
+ */
+_compareRegex(a, b, path) {
+  if (a.toString() !== b.toString()) {
+    throw `${path}: regular expressions are different: ${a} !== ${b}`;
+  }
+}
+
+/**
+ * @private
+ * @description
+ * Compares two objects for equality, including nested objects and arrays
+ * @param {Object} a first object to compare
+ * @param {Object} b second object to compare
+ * @param {string} path path to the object to compare
+ * @throws {string} description of the difference including the path to the object
+ */
+_compareObjects(a, b, path) {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+
+  if (aKeys.length !== bKeys.length) {
+    throw `${path}: objects have different amount of properties`;
+  }
+
+  for (let i = 0; i < aKeys.length; i++) {
+    const key = aKeys[i];
+
+    if (!Object.prototype.hasOwnProperty.call(b, key)) {
+      throw `${path}: missing property ${key}`;
+    }
+
+    this._deepEqualRec(a[key], b[key], `${path}.${key}`);
+  }
+
+  if (a.constructor.name !== b.constructor.name) {
+    throw `${path}: objects have different constructor names: ${a.constructor.name} !== ${b.constructor.name}`;
+  }
+}
 ```
+
+## Code suggestion examples
+
+Providing code, ChatGPT made the following (good) suggestions:
+
+
+```JavaScript
+for (let index = files.length - 1; index >= 0; index--) {
+    const filename = files[index]
+    const filePath = directory + '/' + filename
+    ...
+}
+```
+
+It´s proposal:
+```JavaScript
+for (const filename of files.reverse()) {
+    const filePath = `${directory}/${filename}`;
+    ...
+}
+```
+
+Former:
+```JavaScript
+static async deleteOldFiles (directory, filenameBasis, keepFiles) {
+    const fileMatch = Persist.genFileMatch(filenameBasis)
+    const files = await Persist.readDir(directory)
+    for (let index = files.length - 1; index >= 0; index--) {
+        const filename = files[index]
+        if (!filename.match(fileMatch)) {
+            continue
+        }
+        keepFiles--
+        if (keepFiles <= 0) {
+            await Persist.deleteFile(directory + '/' + filename)
+        }
+    }
+}
+```
+
+```JavaScript
+static async deleteOldFiles (directory, filenameBasis, keepFiles) {
+    const fileMatch = Persist.genFileMatch(filenameBasis)
+    const files = await Persist.readDir(directory)
+    const filesToDelete = files.filter((filename) => filename.match(fileMatch)).slice(0, -keepFiles)
+    for (const filename of filesToDelete) {
+        await Persist.deleteFile(`${directory}/${filename}`)
+    }
+}
+```
+
+Much better to read! But I needed to explain GPT what the original file was doing before it generated a good version. Hmmm.... if GPT does not understand the logic of a function, will a Human understand it?
+
+
 
 ## Summary
 
